@@ -32,6 +32,7 @@ provider:
         - sqs:DeleteMessage
       Resource: arn:aws:sqs:us-west-1:*:*
 
+  apiName: twitch-stitch
   apiKeys:
     - ts_api_key
 
