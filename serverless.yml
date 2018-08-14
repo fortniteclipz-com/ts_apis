@@ -2,13 +2,16 @@ service: twitch-stitch-api
 
 provider:
   name: aws
+  deploymentBucket: twitch-stitch-sls-api
   memorySize: 512
   profile: serverless-admin
   region: us-west-1
   runtime: python3.6
+  stackName: twitch-stitch-sls-api
   stage: dev
   timeout: 30
   versionFunctions: false
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -24,16 +27,12 @@ provider:
       Resource: arn:aws:dynamodb:us-west-1:*:*
     - Effect: Allow
       Action:
-        - s3:PutObject
-        - s3:GetObject
-      Resource: arn:aws:s3:::*
-    - Effect: Allow
-      Action:
         - sqs:GetQueueUrl
         - sqs:SendMessage
         - sqs:ReceiveMessage
         - sqs:DeleteMessage
       Resource: arn:aws:sqs:us-west-1:*:*
+
   apiKeys:
     - ts_api_key
 
