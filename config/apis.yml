@@ -1,6 +1,6 @@
 api-clip-create:
   handler: run.run
-  module: modules/apis/clip_create
+  module: modules/clip_create
   timeout: 30
   events:
       - http:
@@ -11,11 +11,11 @@ api-clip-create:
           private: true
   package:
     include:
-      - modules/apis/clip_create/run.py
+      - modules/clip_create/run.py
 
 api-clip-get-all:
   handler: run.run
-  module: modules/apis/clip_get_all
+  module: modules/clip_get_all
   timeout: 30
   events:
       - http:
@@ -26,11 +26,11 @@ api-clip-get-all:
           private: true
   package:
     include:
-      - modules/apis/clip_get_all/run.py
+      - modules/clip_get_all/run.py
 
 api-montage-create:
   handler: run.run
-  module: modules/apis/montage_create
+  module: modules/montage_create
   timeout: 30
   events:
       - http:
@@ -41,11 +41,11 @@ api-montage-create:
           private: true
   package:
     include:
-      - modules/apis/montage_create/run.py
+      - modules/montage_create/run.py
 
 api-montage-get-all:
   handler: run.run
-  module: modules/apis/montage_get_all
+  module: modules/montage_get_all
   timeout: 30
   events:
       - http:
@@ -56,4 +56,4 @@ api-montage-get-all:
           private: true
   package:
     include:
-      - modules/apis/montage_get_all/run.py
+      - modules/montage_get_all/run.py
