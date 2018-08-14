@@ -2,7 +2,6 @@ service: twitch-stitch-api
 
 provider:
   name: aws
-  deploymentBucket: twitch-stitch-sls-api
   memorySize: 512
   profile: serverless-admin
   region: us-west-1
