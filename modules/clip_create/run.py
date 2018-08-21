@@ -18,7 +18,7 @@ def run(event, context):
     stream = ts_aws.dynamodb.stream.get_stream(stream_id)
     if not stream:
         stream = ts_aws.dynamodb.stream.Stream(stream_id=stream_id)
-        stream = ts_aws.dynamodb.stream.save_stream(stream)
+        ts_aws.dynamodb.stream.save_stream(stream)
         logger.info("stream created")
     logger.info("stream", stream=stream.__dict__)
 
@@ -29,7 +29,7 @@ def run(event, context):
         time_in=clip_time_in,
         time_out=clip_time_out,
     )
-    clip = ts_aws.dynamodb.clip.save_clip(clip)
+    ts_aws.dynamodb.clip.save_clip(clip)
     logger.info("clip created", clip=clip.__dict__)
 
     payload = {
