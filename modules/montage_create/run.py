@@ -29,7 +29,6 @@ def run(event, context):
             clip_order=index,
         )
         montage_clips.append(montage_clip)
-    ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
     logger.info("montage_clips", montage_clips_length=len(montage_clips))
 
     clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
@@ -68,6 +67,7 @@ def run(event, context):
     montage.key_playlist_video = m3u8_key_video
     montage.key_playlist_audio = m3u8_key_audio
     ts_aws.dynamodb.montage.save_montage(montage)
+    ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
 
     logger.info("done")
     return montage.montage_id
