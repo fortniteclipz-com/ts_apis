@@ -20,6 +20,7 @@ def run(event, context):
         stream_id=stream_id,
         time_in=clip_time_in,
         time_out=clip_time_out,
+        _status=ts_aws.dynamodb.clip.ClipStatus.INITIALIZED
     )
     ts_aws.dynamodb.clip.save_clip(clip)
     logger.info("clip created", clip=clip.__dict__)
