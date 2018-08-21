@@ -19,8 +19,7 @@ def run(event, context):
 
     montage_id = f"m-{shortuuid.uuid()}"
     montage = ts_aws.dynamodb.montage.Montage(montage_id=montage_id)
-    ts_aws.dynamodb.montage.save_montage(montage)
-    logger.set(montage=montage.__dict__).info("montage created")
+    logger.set(montage=montage.__dict__).logger.info("montage")
 
     montage_clips = []
     for index, clip_id in enumerate(clip_ids):
@@ -31,7 +30,6 @@ def run(event, context):
         )
         montage_clips.append(montage_clip)
     ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
-    logger.info("montage", montage=montage.__dict__)
     logger.info("montage_clips", montage_clips_length=len(montage_clips))
 
     clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
