@@ -1,5 +1,4 @@
 import ts_aws.dynamodb.clip
-import ts_aws.dynamodb.stream
 import ts_aws.sqs
 import ts_logger
 
