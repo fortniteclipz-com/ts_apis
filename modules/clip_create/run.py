@@ -15,13 +15,6 @@ def run(event, context):
     clip_time_in = body['time_in']
     clip_time_out = body['time_out']
 
-    stream = ts_aws.dynamodb.stream.get_stream(stream_id)
-    if not stream:
-        stream = ts_aws.dynamodb.stream.Stream(stream_id=stream_id)
-        ts_aws.dynamodb.stream.save_stream(stream)
-        logger.info("stream created")
-    logger.info("stream", stream=stream.__dict__)
-
     clip_id = f"c-{shortuuid.uuid()}"
     clip = ts_aws.dynamodb.clip.Clip(
         clip_id=clip_id,
