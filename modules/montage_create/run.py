@@ -14,7 +14,8 @@ def run(event, context):
         logger.info("body", body=body)
         clip_ids = body['clip_ids']
 
-        montage = ts_aws.dynamodb.montage.Montage()
+        montage_id = f"m-{shortuuid.uuid()}"
+        montage = ts_aws.dynamodb.montage.Montage(montage_id=montage_id)
         montage = ts_aws.dynamodb.montage.save_montage(montage)
         logger.info("montage created", montage=montage.__dict__)
 
