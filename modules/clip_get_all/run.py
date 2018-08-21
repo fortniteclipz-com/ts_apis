@@ -8,6 +8,5 @@ def run(event, context):
     clips = ts_aws.dynamodb.clip.get_all_clips()
 
     response = list(map(lambda c: c.__dict__, clips))
-
     logger.info("done", response=response)
     return response
