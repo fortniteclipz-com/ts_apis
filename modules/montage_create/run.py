@@ -20,7 +20,7 @@ def run(event, context):
     montage_id = f"m-{shortuuid.uuid()}"
     montage = ts_aws.dynamodb.montage.Montage(montage_id=montage_id)
     ts_aws.dynamodb.montage.save_montage(montage)
-    logger.info("montage created", montage=montage.__dict__)
+    logger.set(montage=montage.__dict__).info("montage created")
 
     montage_clips = []
     for index, clip_id in enumerate(clip_ids):
@@ -42,12 +42,6 @@ def run(event, context):
 
     clips_segments = ts_aws.dynamodb.clip_segment.get_clips_segments(clip_ids)
     logger.info("clips_segments", clips_segments_length=len(clips_segments))
-
-    def sort(cs):
-        for mc in montage_clips:
-            if mc.clip_id == cs.clip_id:
-                return (mc.clip_order, cs.segment)
-    clips_segments.sort(key=sort)
 
     clip_id = clips_segments[0].clip_id
     for cs in clips_segments:
