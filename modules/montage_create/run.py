@@ -62,7 +62,7 @@ def run(event, context):
     ts_file.delete(m3u8_filename_video)
     ts_file.delete(m3u8_filename_audio)
 
-    logger.info("saving montage")
+    logger.info("saving montage and montage_clips")
     montage.key_playlist_master = m3u8_key_master
     montage.key_playlist_video = m3u8_key_video
     montage.key_playlist_audio = m3u8_key_audio
