@@ -1,3 +1,4 @@
+import ts_aws.dynamodb
 import ts_aws.dynamodb.clip
 import ts_aws.sqs
 import ts_logger
@@ -20,7 +21,7 @@ def run(event, context):
         stream_id=stream_id,
         time_in=clip_time_in,
         time_out=clip_time_out,
-        _status=ts_aws.dynamodb.clip.ClipStatus.INITIALIZED
+        _status=ts_aws.dynamodb.Status.INITIALIZING
     )
     ts_aws.dynamodb.clip.save_clip(clip)
     logger.info("clip created", clip=clip.__dict__)
