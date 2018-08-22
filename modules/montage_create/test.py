@@ -2,7 +2,8 @@ import run
 
 data = {
     'clip_ids': [
-        "c-HyZyL7cQtsDyjcBrdrRkKU",
+        "c-PLHaAtJLjuoUycwaZVG4iR",
+        "c-VqKKWjAjdUNFg6wiMDTRni",
     ],
 }
 event = {'body': data}

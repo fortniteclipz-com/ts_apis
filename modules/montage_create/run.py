@@ -34,7 +34,7 @@ def run(event, context):
 
     clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
     clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
-    if not all(c.status >= ts_aws.dynamodb.Status.READY for c in clips):
+    if not all(c._status == ts_aws.dynamodb.Status.READY for c in clips):
         logger.error("clips not ready to montage")
         raise Exception("Not all clips processed yet")
 
