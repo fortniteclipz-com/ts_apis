@@ -1,6 +1,6 @@
 import ts_aws.dynamodb
 import ts_aws.dynamodb.clip
-import ts_aws.sqs
+import ts_aws.sqs.clip
 import ts_logger
 
 import shortuuid
@@ -30,7 +30,7 @@ def run(event, context):
         'clip_id': clip.clip_id,
     }
     logger.info("pushing to stream_clip sqs", payload=payload)
-    ts_aws.sqs.send_clip_message(payload)
+    ts_aws.sqs.clip.send_message(payload)
 
     logger.info("done")
     return clip.clip_id
