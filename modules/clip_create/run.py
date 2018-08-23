@@ -30,7 +30,7 @@ def run(event, context):
         'clip_id': clip.clip_id,
     }
     logger.info("pushing to stream_clip sqs", payload=payload)
-    ts_aws.sqs.send_stream_clip(payload)
+    ts_aws.sqs.send_clip(payload)
 
     logger.info("done")
     return clip.clip_id
