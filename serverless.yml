@@ -2,7 +2,7 @@ service: twitch-stitch-api
 
 provider:
   name: aws
-  memorySize: 512
+  memorySize: 128
   profile: serverless-admin
   region: us-west-1
   runtime: python3.6

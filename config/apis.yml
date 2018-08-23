@@ -1,7 +1,6 @@
 api-clip-create:
   handler: run.run
   module: modules/clip_create
-  timeout: 30
   events:
       - http:
           path: clip
@@ -16,7 +15,6 @@ api-clip-create:
 api-clip-get-all:
   handler: run.run
   module: modules/clip_get_all
-  timeout: 30
   events:
       - http:
           path: clip
@@ -31,7 +29,6 @@ api-clip-get-all:
 api-montage-create:
   handler: run.run
   module: modules/montage_create
-  timeout: 30
   events:
       - http:
           path: montage
@@ -46,7 +43,6 @@ api-montage-create:
 api-montage-get-all:
   handler: run.run
   module: modules/montage_get_all
-  timeout: 30
   events:
       - http:
           path: montage
