@@ -1,4 +1,4 @@
-service: twitch-stitch-api
+service: ts-api
 
 provider:
   name: aws
@@ -6,7 +6,6 @@ provider:
   profile: serverless-admin
   region: us-west-1
   runtime: python3.6
-  stackName: sls-twitch-stitch-api
   stage: dev
   timeout: 30
   versionFunctions: false
