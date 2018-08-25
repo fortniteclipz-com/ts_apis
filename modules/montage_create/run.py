@@ -37,7 +37,6 @@ def run(event, context):
         raise Exception("Not all clips processed yet")
 
     clips_segments = ts_aws.dynamodb.clip_segment.get_clips_segments(clip_ids)
-
     clip_id = clips_segments[0].clip_id
     for cs in clips_segments:
         if cs.clip_id != clip_id:
