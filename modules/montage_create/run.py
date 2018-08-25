@@ -20,7 +20,6 @@ def run(event, context):
 
     montage_id = f"m-{shortuuid.uuid()}"
     montage = ts_aws.dynamodb.montage.Montage(montage_id=montage_id)
-    logger.set(montage=montage.__dict__).logger.info("montage")
 
     montage_clips = []
     for index, clip_id in enumerate(clip_ids):
@@ -30,7 +29,6 @@ def run(event, context):
             clip_order=index,
         )
         montage_clips.append(montage_clip)
-    logger.info("montage_clips", montage_clips_length=len(montage_clips))
 
     clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
     clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
@@ -39,7 +37,6 @@ def run(event, context):
         raise Exception("Not all clips processed yet")
 
     clips_segments = ts_aws.dynamodb.clip_segment.get_clips_segments(clip_ids)
-    logger.info("clips_segments", clips_segments_length=len(clips_segments))
 
     clip_id = clips_segments[0].clip_id
     for cs in clips_segments:
@@ -48,7 +45,6 @@ def run(event, context):
             clip_id = cs.clip_id
 
     # creating/uploading m3u8
-    logger.info("creating/uploading m3u8")
     m3u8_filename_master = f"/tmp/playlist-master.m3u8"
     m3u8_filename_video = f"/tmp/playlist-video.m3u8"
     m3u8_filename_audio = f"/tmp/playlist-audio.m3u8"
@@ -63,12 +59,12 @@ def run(event, context):
     ts_file.delete(m3u8_filename_video)
     ts_file.delete(m3u8_filename_audio)
 
-    logger.info("saving montage and montage_clips")
     montage.key_playlist_master = m3u8_key_master
     montage.key_playlist_video = m3u8_key_video
     montage.key_playlist_audio = m3u8_key_audio
     ts_aws.dynamodb.montage.save_montage(montage)
     ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
 
-    logger.info("done")
-    return montage.montage_id
+    response = montage.montage_id
+    logger.info("done" response=response)
+    return response

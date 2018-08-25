@@ -24,14 +24,13 @@ def run(event, context):
         _status=ts_aws.dynamodb.Status.INITIALIZING
     )
     ts_aws.dynamodb.clip.save_clip(clip)
-    logger.info("clip created", clip=clip.__dict__)
 
     payload = {
         'clip_id': clip.clip_id,
     }
-    logger.info("pushing to stream_clip sqs", payload=payload)
     ts_aws.sqs.clip.send_message(payload)
 
-    logger.info("done")
+    response = clip.clip_id
+    logger.info("done", response=response)
     return clip.clip_id
 
