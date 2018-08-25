@@ -1,4 +1,3 @@
-import ts_aws.dynamodb
 import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.clip_segment
 import ts_aws.dynamodb.montage
@@ -7,6 +6,9 @@ import ts_aws.s3
 import ts_file
 import ts_logger
 import ts_media
+import ts_model.Montage
+import ts_model.MontageClip
+import ts_model.Status
 
 import shortuuid
 
@@ -19,11 +21,11 @@ def run(event, context):
     clip_ids = body['clip_ids']
 
     montage_id = f"m-{shortuuid.uuid()}"
-    montage = ts_aws.dynamodb.montage.Montage(montage_id=montage_id)
+    montage = ts_model.Montage(montage_id=montage_id)
 
     montage_clips = []
     for index, clip_id in enumerate(clip_ids):
-        montage_clip = ts_aws.dynamodb.montage_clip.MontageClip(
+        montage_clip = ts_model.MontageClip(
             montage_id=montage.montage_id,
             clip_id=clip_id,
             clip_order=index,
@@ -32,7 +34,7 @@ def run(event, context):
 
     clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
     clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
-    if not all(c._status == ts_aws.dynamodb.Status.READY for c in clips):
+    if not all(c._status == ts_model.Status.READY for c in clips):
         logger.error("clips not ready to montage")
         raise Exception("Not all clips processed yet")
 

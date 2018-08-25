@@ -1,7 +1,8 @@
-import ts_aws.dynamodb
 import ts_aws.dynamodb.clip
 import ts_aws.sqs.clip
 import ts_logger
+import ts_model.Clip
+import ts_model.Status
 
 import shortuuid
 
@@ -16,12 +17,12 @@ def run(event, context):
     clip_time_out = body['time_out']
 
     clip_id = f"c-{shortuuid.uuid()}"
-    clip = ts_aws.dynamodb.clip.Clip(
+    clip = ts_model.Clip(
         clip_id=clip_id,
         stream_id=stream_id,
         time_in=clip_time_in,
         time_out=clip_time_out,
-        _status=ts_aws.dynamodb.Status.INITIALIZING
+        _status=ts_model.Status.INITIALIZING
     )
     ts_aws.dynamodb.clip.save_clip(clip)
 
