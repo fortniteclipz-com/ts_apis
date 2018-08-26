@@ -10,7 +10,7 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        query = queryStringParameters['queryStringParameters'] or {}
+        query = event.get('queryStringParameters') or {}
         limit = int(query.get('limit', 20))
 
         montages = ts_aws.dynamodb.montage.get_all_montages(limit)
