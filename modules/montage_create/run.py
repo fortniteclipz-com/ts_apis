@@ -41,7 +41,7 @@ def run(event, context):
         # check clips
         clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
         clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
-        if not all(c._status == ts_model.Status.READY for c in clips) or True:
+        if not all(c._status == ts_model.Status.READY for c in clips):
             raise ts_model.Exception(ts_model.Exception.CLIPS__NOT_READY)
 
         # get clips_segments
