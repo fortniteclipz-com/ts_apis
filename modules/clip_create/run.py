@@ -4,34 +4,51 @@ import ts_logger
 import ts_model.Clip
 import ts_model.Status
 
+import json
 import shortuuid
+import traceback
 
 logger = ts_logger.get(__name__)
 
 def run(event, context):
-    logger.info("start", event=event, context=context)
-    body = event['body']
-    logger.info("body", body=body)
-    stream_id = body['stream_id']
-    clip_time_in = body['time_in']
-    clip_time_out = body['time_out']
+    try:
+        logger.info("start", event=event, context=context)
+        body = json.loads(event['body'])
+        logger.info("body", body=body)
+        stream_id = body['stream_id']
+        time_in = body['time_ins']
+        ime_out = body['time_out']
 
-    clip_id = f"c-{shortuuid.uuid()}"
-    clip = ts_model.Clip(
-        clip_id=clip_id,
-        stream_id=stream_id,
-        time_in=clip_time_in,
-        time_out=clip_time_out,
-        _status=ts_model.Status.INITIALIZING
-    )
-    ts_aws.dynamodb.clip.save_clip(clip)
+        # create clip
+        clip_id = f"c-{shortuuid.uuid()}"
+        clip = ts_model.Clip(
+            clip_id=clip_id,
+            stream_id=stream_id,
+            time_in=time_in,
+            time_out=ime_out,
+            _status=ts_model.Status.INITIALIZING,
+        )
+        ts_aws.dynamodb.clip.save_clip(clip)
 
-    payload = {
-        'clip_id': clip.clip_id,
-    }
-    ts_aws.sqs.clip.send_message(payload)
+        # send clip job to sqs
+        payload = {
+            'clip_id': clip.clip_id,
+        }
+        ts_aws.sqs.clip.send_message(payload)
 
-    response = clip.clip_id
-    logger.info("success", response=response)
-    return clip.clip_id
+        logger.info("success", clip=clip)
+        return {
+            'statusCode': 200,
+            'body': json.dumps({
+                'clip': clip,
+            }),
+        }
 
+    except Exception as e:
+        logger.error("error", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
+        return {
+            'statusCode': 400,
+            'body': json.dumps({
+                'error': f"{e.__class__.__name__}: {str(e)}",
+            }),
+        }

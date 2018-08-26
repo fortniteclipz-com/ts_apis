@@ -6,7 +6,6 @@ api-clip-create:
           path: clip
           method: post
           cors: true
-          integration: lambda
           private: true
   package:
     include:
@@ -20,7 +19,6 @@ api-clip-get-all:
           path: clip
           method: get
           cors: true
-          integration: lambda
           private: true
   package:
     include:
@@ -34,7 +32,6 @@ api-montage-create:
           path: montage
           method: post
           cors: true
-          integration: lambda
           private: true
   package:
     include:
@@ -48,7 +45,6 @@ api-montage-get-all:
           path: montage
           method: get
           cors: true
-          integration: lambda
           private: true
   package:
     include:
