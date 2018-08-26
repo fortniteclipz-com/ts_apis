@@ -77,6 +77,9 @@ def run(event, context):
         logger.info("success", montage=montage)
         return {
             'statusCode': 200,
+            'headers': {
+                "Access-Control-Allow-Origin" : "*",
+            },
             'body': json.dumps({
                 'montage': montage,
             }),
@@ -86,6 +89,9 @@ def run(event, context):
         logger.error("error", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
         return {
             'statusCode': 400,
+            'headers': {
+                "Access-Control-Allow-Origin" : "*",
+            },
             'body': json.dumps({
                 'error': f"{e.__class__.__name__}: {str(e)}",
             }),
@@ -95,6 +101,9 @@ def run(event, context):
         logger.error("error", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
         return {
             'statusCode': 400,
+            'headers': {
+                "Access-Control-Allow-Origin" : "*",
+            },
             'body': json.dumps({
                 'error': f"{e.__class__.__name__}: {str(e)}",
             }),
