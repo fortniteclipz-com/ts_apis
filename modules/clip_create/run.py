@@ -32,6 +32,6 @@ def run(event, context):
     ts_aws.sqs.clip.send_message(payload)
 
     response = clip.clip_id
-    logger.info("done", response=response)
+    logger.info("success", response=response)
     return clip.clip_id
 

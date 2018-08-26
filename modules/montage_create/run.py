@@ -67,5 +67,5 @@ def run(event, context):
     ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
 
     response = montage.montage_id
-    logger.info("done", response=response)
+    logger.info("success", response=response)
     return response

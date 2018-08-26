@@ -13,5 +13,5 @@ def run(event, context):
         m.clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
 
     response = list(map(lambda m: m.__dict__, montages))
-    logger.info("done", response=response)
+    logger.info("success", response=response)
     return response
