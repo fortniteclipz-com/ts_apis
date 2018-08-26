@@ -4,7 +4,7 @@ provider:
   name: aws
   memorySize: 128
   profile: serverless-admin
-  region: us-west-1
+  region: ${self:custom.config.aws.region}
   runtime: python3.6
   stage: dev
   timeout: 30
@@ -22,7 +22,7 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:BatchGetItem
         - dynamodb:BatchWriteItem
-      Resource: arn:aws:dynamodb:us-west-1:${self:custom.config.aws.account-id}:*
+      Resource: arn:aws:dynamodb:${self:custom.config.aws.region}:${self:custom.config.aws.account-id}:*
     - Effect: Allow
       Action:
         - s3:PutObject
@@ -35,7 +35,7 @@ provider:
         - sqs:ReceiveMessage
         - sqs:DeleteMessage
         - sqs:ChangeMessageVisibility
-      Resource: arn:aws:sqs:us-west-1:${self:custom.config.aws.account-id}:*
+      Resource: arn:aws:sqs:${self:custom.config.aws.region}:${self:custom.config.aws.account-id}:*
 
   apiName: twitch-stitch
   apiKeys:
