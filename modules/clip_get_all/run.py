@@ -10,7 +10,7 @@ def run(event, context):
     try:
         logger.info("start", event=event, context=context)
         query = event.get('queryStringParameters') or {}
-        limit = query.get('limit', 20)
+        limit = int(query.get('limit', 20))
 
         clips = ts_aws.dynamodb.clip.get_all_clips(limit)
 

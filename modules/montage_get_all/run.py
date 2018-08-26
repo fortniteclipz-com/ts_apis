@@ -11,7 +11,7 @@ def run(event, context):
     try:
         logger.info("start", event=event, context=context)
         query = queryStringParameters['queryStringParameters'] or {}
-        limit = query.get('limit', 20)
+        limit = int(query.get('limit', 20))
 
         montages = ts_aws.dynamodb.montage.get_all_montages(limit)
         for m in montages:
