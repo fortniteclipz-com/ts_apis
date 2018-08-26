@@ -10,8 +10,10 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        montages = ts_aws.dynamodb.montage.get_all_montages()
+        query = queryStringParameters['queryStringParameters'] or {}
+        limit = query.get('limit', 20)
 
+        montages = ts_aws.dynamodb.montage.get_all_montages(limit)
         for m in montages:
             montage_clips = ts_aws.dynamodb.montage_clip.get_montage_clips(m.montage_id)
             m.clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))

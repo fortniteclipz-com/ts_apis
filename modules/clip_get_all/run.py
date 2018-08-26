@@ -9,7 +9,10 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        clips = ts_aws.dynamodb.clip.get_all_clips()
+        query = event.get('queryStringParameters') or {}
+        limit = query.get('limit', 20)
+
+        clips = ts_aws.dynamodb.clip.get_all_clips(limit)
 
         logger.info("success", clips=clips)
         return {
