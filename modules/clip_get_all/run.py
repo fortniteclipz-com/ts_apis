@@ -10,6 +10,7 @@ def run(event, context):
     try:
         logger.info("start", event=event, context=context)
         clips = ts_aws.dynamodb.clip.get_all_clips()
+
         logger.info("success", clips=clips)
         return {
             'statusCode': 200,

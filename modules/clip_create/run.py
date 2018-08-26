@@ -16,7 +16,7 @@ def run(event, context):
         body = json.loads(event['body'])
         logger.info("body", body=body)
         stream_id = body['stream_id']
-        time_in = body['time_ins']
+        time_in = body['time_in']
         ime_out = body['time_out']
 
         # create clip
