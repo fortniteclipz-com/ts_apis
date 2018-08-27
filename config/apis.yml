@@ -1,6 +1,6 @@
-api-clip-create:
+api--clip--create:
   handler: run.run
-  module: modules/clip_create
+  module: modules/clip__create
   events:
       - http:
           path: clip
@@ -9,11 +9,11 @@ api-clip-create:
           private: true
   package:
     include:
-      - modules/clip_create/run.py
+      - modules/clip__create/run.py
 
-api-clip-get-all:
+api--clip--get-all:
   handler: run.run
-  module: modules/clip_get_all
+  module: modules/clip__get_all
   events:
       - http:
           path: clip
@@ -22,11 +22,11 @@ api-clip-get-all:
           private: true
   package:
     include:
-      - modules/clip_get_all/run.py
+      - modules/clip__get_all/run.py
 
-api-montage-create:
+api--montage--create:
   handler: run.run
-  module: modules/montage_create
+  module: modules/montage__create
   events:
       - http:
           path: montage
@@ -35,11 +35,11 @@ api-montage-create:
           private: true
   package:
     include:
-      - modules/montage_create/run.py
+      - modules/montage__create/run.py
 
-api-montage-get-all:
+api--montage--get-all:
   handler: run.run
-  module: modules/montage_get_all
+  module: modules/montage__get_all
   events:
       - http:
           path: montage
@@ -48,4 +48,4 @@ api-montage-get-all:
           private: true
   package:
     include:
-      - modules/montage_get_all/run.py
+      - modules/montage__get_all/run.py
