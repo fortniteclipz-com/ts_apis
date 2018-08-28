@@ -19,12 +19,12 @@ def run(event, context):
         logger.info("body", body=body)
 
         if 'montage_id' in body:
-            montage_id = body['montage_id']
-            media = ts_aws.dynamodb.montage.get_montage(montage_id)
+            media_id = body['montage_id']
+            media = ts_aws.dynamodb.montage.get_montage(media_id)
             media_type = "montage"
         elif 'clip_id' in body:
-            clip_id = body['clip_id']
-            media = ts_aws.dynamodb.clip.get_clip(clip_id)
+            media_id = body['clip_id']
+            media = ts_aws.dynamodb.clip.get_clip(media_id)
             media_type = "clip"
         else:
             raise ts_model.Exception(ts_model.Exception.MEDIA__NOT_EXIST)
