@@ -1,5 +1,8 @@
+import ts_aws.dynamodb.clip
+import ts_aws.dynamodb.montage
 import ts_aws.mediaconvert
 import ts_logger
+import ts_model.Exception
 import ts_model.Status
 
 import json
@@ -15,6 +18,25 @@ def run(event, context):
         media_type = body['media_type']
         media_id = body['media_id']
 
+        if media_type == "clip":
+            media = ts_aws.dynamodb.clip.get_clip(media_id)
+        elif media_type == "montage":
+            media = ts_aws.dynamodb.montage.get_montage(media_id)
+        else:
+            raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__INVALID_MEDIA_TYPE)
+
+        if media is None:
+            raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__INVALID_MEDIA_ID)
+        if media._status_export == ts_model.Status.READY:
+            raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_PROCESSED)
+        if media._status_export == ts_model.Status.INITIALIZING:
+            raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_INITIALIZING)
+
+        media._status_export = ts_model.Status.INITIALIZING
+        if media_type == "clip":
+            ts_aws.dynamodb.clip.save_clip(media)
+        elif media_type == "montage":
+            ts_aws.dynamodb.montage.save_montage(media)
         ts_aws.mediaconvert.create_media_export(media_type, media_id)
 
         logger.info("success")

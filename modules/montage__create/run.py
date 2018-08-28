@@ -1,5 +1,4 @@
 import ts_aws.dynamodb.clip
-import ts_aws.dynamodb.clip_segment
 import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.montage_clip
 import ts_aws.s3
@@ -45,7 +44,7 @@ def run(event, context):
             raise ts_model.Exception(ts_model.Exception.CLIPS__NOT_READY)
 
         # get clips_segments
-        clips_segments = ts_aws.dynamodb.clip_segment.get_clips_segments(clip_ids)
+        clips_segments = ts_aws.dynamodb.clip.get_clips_clip_segments(clip_ids)
         clip_id = clips_segments[0].clip_id
         for cs in clips_segments:
             if cs.clip_id != clip_id:
@@ -82,18 +81,6 @@ def run(event, context):
             },
             'body': json.dumps({
                 'montage': montage,
-            }),
-        }
-
-    except ts_model.Exception as e:
-        logger.error("error", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
-        return {
-            'statusCode': 400,
-            'headers': {
-                "Access-Control-Allow-Origin" : "*",
-            },
-            'body': json.dumps({
-                'error': f"{e.__class__.__name__}: {str(e)}",
             }),
         }
 

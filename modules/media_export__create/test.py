@@ -2,8 +2,8 @@ import run
 import json
 
 bodies = [{
-    'media_type': "",
-    'media_id': "",
+    'media_type': "clip",
+    'media_id': "c-rdMaVaUnwWJ9xHgSnA9EJK",
 }]
 
 for body in bodies:

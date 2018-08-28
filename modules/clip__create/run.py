@@ -1,10 +1,13 @@
 import ts_aws.dynamodb.clip
+import ts_aws.dynamodb.stream
 import ts_aws.sqs.clip
 import ts_logger
 import ts_model.Clip
+import ts_model.Exception
 import ts_model.Status
 
 import json
+import streamlink
 import shortuuid
 import traceback
 
@@ -17,7 +20,21 @@ def run(event, context):
         logger.info("body", body=body)
         stream_id = body['stream_id']
         time_in = body['time_in']
-        ime_out = body['time_out']
+        time_out = body['time_out']
+
+        try:
+            stream = ts_aws.dynamodb.stream.get_stream(stream_id)
+        except ts_model.Exception as e:
+            logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
+            pass
+
+        try:
+            twitch_stream_url = f"https://twitch.tv/videos/{stream_id}"
+            twitch_streams = streamlink.streams(twitch_stream_url)
+            twitch_stream = twitch_streams['best']
+        except Exception as e:
+            logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
+            raise ts_model.Exception(ts_model.Exception.STREAM__INVALID) from None
 
         # create clip
         clip_id = f"c-{shortuuid.uuid()}"
@@ -25,7 +42,7 @@ def run(event, context):
             clip_id=clip_id,
             stream_id=stream_id,
             time_in=time_in,
-            time_out=ime_out,
+            time_out=time_out,
             _status=ts_model.Status.INITIALIZING,
         )
         ts_aws.dynamodb.clip.save_clip(clip)
