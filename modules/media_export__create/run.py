@@ -2,7 +2,9 @@ import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
 import ts_aws.mediaconvert
 import ts_logger
+import ts_model.Clip
 import ts_model.Exception
+import ts_model.Montage
 import ts_model.Status
 
 import json
@@ -15,29 +17,31 @@ def run(event, context):
         logger.info("start", event=event, context=context)
         body = json.loads(event['body'])
         logger.info("body", body=body)
-        media_type = body['media_type']
-        media_id = body['media_id']
 
-        if media_type == "clip":
-            media = ts_aws.dynamodb.clip.get_clip(media_id)
-        elif media_type == "montage":
-            media = ts_aws.dynamodb.montage.get_montage(media_id)
+        if 'montage_id' in body:
+            montage_id = body['montage_id']
+            media = ts_aws.dynamodb.montage.get_montage(montage_id)
+            media_type = "montage"
+        elif 'clip_id' in body:
+            clip_id = body['clip_id']
+            media = ts_aws.dynamodb.clip.get_clip(clip_id)
+            media_type = "clip"
         else:
-            raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__INVALID_MEDIA_TYPE)
+            raise ts_model.Exception(ts_model.Exception.MEDIA__NOT_EXIST)
 
-        if media_type == "clip" and media._status != ts_model.Status.READY:
+        if type(media) == ts_model.Clip and media._status != ts_model.Status.READY:
             raise ts_model.Exception(ts_model.Exception.CLIP__NOT_READY)
         if media._status_export == ts_model.Status.READY:
-            raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_PROCESSED)
+            raise ts_model.Exception(ts_model.Exception.MEDIA__ALREADY_PROCESSED)
         if media._status_export == ts_model.Status.INITIALIZING:
-            raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_INITIALIZING)
+            raise ts_model.Exception(ts_model.Exception.MEDIA__ALREADY_INITIALIZING)
 
         ts_aws.mediaconvert.create_media_export(media_type, media_id)
         media._status_export = ts_model.Status.INITIALIZING
 
-        if media_type == "clip":
+        if type(media) == ts_model.Clip:
             ts_aws.dynamodb.clip.save_clip(media)
-        elif media_type == "montage":
+        elif type(media) == ts_model.Montage:
             ts_aws.dynamodb.montage.save_montage(media)
 
         logger.info("success")

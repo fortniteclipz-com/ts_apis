@@ -27,7 +27,6 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
-            _status_export=ts_model.Status.NONE,
         )
 
         # create montage_clips

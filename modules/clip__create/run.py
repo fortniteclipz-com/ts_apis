@@ -29,7 +29,6 @@ def run(event, context):
             time_in=time_in,
             time_out=time_out,
             _status=ts_model.Status.INITIALIZING,
-            _status_export=ts_model.Status.NONE,
         )
         ts_aws.dynamodb.clip.save_clip(clip)
 
