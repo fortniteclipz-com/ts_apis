@@ -1,11 +1,13 @@
 import run
 import json
 
-data = {
+bodies = [{
     'clip_ids': [
         "c-gJdUyL7eTVUowwxKoPKQE9",
     ],
-}
-event = {'body': json.dumps(data)}
-run.run(event, {})
+}]
+
+for body in bodies:
+    event = {'body': json.dumps(body)}
+    run.run(event, {})
 

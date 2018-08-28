@@ -1,12 +1,12 @@
 import run
 import json
 
-datas = [{
+bodies = [{
     'media_type': "",
     'media_id': "",
 }]
 
-for data in datas:
-    event = {'body': json.dumps(data)}
+for body in bodies:
+    event = {'body': json.dumps(body)}
     run.run(event, {})
 

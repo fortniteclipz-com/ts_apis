@@ -1,13 +1,13 @@
 import run
 import json
 
-datas = [{
+bodies = [{
     'stream_id': 285219394,
     'time_in': 6,
     'time_out': 23,
 }]
 
-for data in datas:
-    event = {'body': json.dumps(data)}
+for body in bodies:
+    event = {'body': json.dumps(body)}
     run.run(event, {})
 
