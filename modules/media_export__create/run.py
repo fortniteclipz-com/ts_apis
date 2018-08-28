@@ -45,8 +45,7 @@ def run(event, context):
                 "Access-Control-Allow-Origin" : "*",
             },
             'body': json.dumps({
-                'media_type': media_type,
-                'media_id': media_id,
+                media_type: media,
             }),
         }
 
