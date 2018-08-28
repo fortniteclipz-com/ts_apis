@@ -2,45 +2,17 @@ service: ts-api
 
 provider:
   name: aws
-  memorySize: 128
   profile: serverless-admin
   region: ${self:custom.config.aws.region}
   runtime: python3.6
   stage: dev
-  timeout: 30
   versionFunctions: false
 
   iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-        - dynamodb:BatchGetItem
-        - dynamodb:BatchWriteItem
-      Resource: arn:aws:dynamodb:${self:custom.config.aws.region}:${self:custom.config.aws.account-id}:*
-    - Effect: Allow
-      Action:
-        - mediaconvert:CreateJob
-      Resource: arn:aws:mediaconvert:${self:custom.config.aws.region}:${self:custom.config.aws.account-id}:*
-    - Effect: Allow
-      Action:
-        - s3:PutObject
-        - s3:GetObject
-      Resource: arn:aws:s3:::*
-    - Effect: Allow
-      Action:
-        - sqs:GetQueueUrl
-        - sqs:SendMessage
-        - sqs:ReceiveMessage
-        - sqs:DeleteMessage
-        - sqs:ChangeMessageVisibility
-      Resource: arn:aws:sqs:${self:custom.config.aws.region}:${self:custom.config.aws.account-id}:*
+    ${self:custom.config.aws.iam.role-statement}
 
+  memorySize: 128
+  timeout: 30
   apiName: twitch-stitch
   apiKeys:
     - ts_api_key
