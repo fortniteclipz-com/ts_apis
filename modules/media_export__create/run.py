@@ -25,15 +25,16 @@ def run(event, context):
         else:
             raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__INVALID_MEDIA_TYPE)
 
+        if media._status != ts_model.Status.READY:
+            raise ts_model.Exception(ts_model.Exception.MEDIA__NOT_READY)
         if media._status_export == ts_model.Status.READY:
             raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_PROCESSED)
         if media._status_export == ts_model.Status.INITIALIZING:
             raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_INITIALIZING)
 
         ts_aws.mediaconvert.create_media_export(media_type, media_id)
-        media.key_media_export = f"{media_type}/{media_id}/{media_type}.mp4"
-
         media._status_export = ts_model.Status.INITIALIZING
+
         if media_type == "clip":
             ts_aws.dynamodb.clip.save_clip(media)
         elif media_type == "montage":
