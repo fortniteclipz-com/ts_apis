@@ -25,8 +25,8 @@ def run(event, context):
         else:
             raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__INVALID_MEDIA_TYPE)
 
-        if media._status != ts_model.Status.READY:
-            raise ts_model.Exception(ts_model.Exception.MEDIA__NOT_READY)
+        if media_type == "clip" and media._status != ts_model.Status.READY:
+            raise ts_model.Exception(ts_model.Exception.CLIP__NOT_READY)
         if media._status_export == ts_model.Status.READY:
             raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_PROCESSED)
         if media._status_export == ts_model.Status.INITIALIZING:
