@@ -30,12 +30,13 @@ def run(event, context):
         if media._status_export == ts_model.Status.INITIALIZING:
             raise ts_model.Exception(ts_model.Exception.MEDIA_EXPORT__ALREADY_INITIALIZING)
 
+        ts_aws.mediaconvert.create_media_export(media_type, media_id)
+
         media._status_export = ts_model.Status.INITIALIZING
         if media_type == "clip":
             ts_aws.dynamodb.clip.save_clip(media)
         elif media_type == "montage":
             ts_aws.dynamodb.montage.save_montage(media)
-        ts_aws.mediaconvert.create_media_export(media_type, media_id)
 
         logger.info("success")
         return {

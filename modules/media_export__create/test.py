@@ -3,7 +3,7 @@ import json
 
 bodies = [{
     'media_type': "clip",
-    'media_id': "c-rdMaVaUnwWJ9xHgSnA9EJK",
+    'media_id': "c-zbFvt88cty9VhkpKqHVLDo",
 }]
 
 for body in bodies:
