@@ -25,16 +25,16 @@ def run(event, context):
         try:
             stream = ts_aws.dynamodb.stream.get_stream(stream_id)
         except ts_model.Exception as e:
-            logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
-            stream = ts_model.Stream(
-                stream_id=stream_id,
-                _status=ts_model.Status.INITIALIZING
-            )
-            ts_aws.dynamodb.stream.save_stream(stream)
-            payload = {
-                'stream_id': stream_id,
-            }
-            ts_aws.sqs.stream_initialize.send_message(payload)
+            if e.code == ts_model.Exception.STREAM__NOT_EXIST:
+                logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
+                stream = ts_model.Stream(
+                    stream_id=stream_id,
+                    _status=ts_model.Status.INITIALIZING
+                )
+                ts_aws.dynamodb.stream.save_stream(stream)
+                ts_aws.sqs.stream_initialize.send_message({
+                    'stream_id': stream_id,
+                })
 
         # initialize clip
         clip_id = f"c-{shortuuid.uuid()}"
@@ -48,10 +48,9 @@ def run(event, context):
         ts_aws.dynamodb.clip.save_clip(clip)
 
         # send clip job to sqs
-        payload = {
+        ts_aws.sqs.clip.send_message({
             'clip_id': clip.clip_id,
-        }
-        ts_aws.sqs.clip.send_message(payload)
+        })
 
         logger.info("success", clip=clip)
         return {
