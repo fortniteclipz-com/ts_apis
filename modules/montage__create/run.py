@@ -34,12 +34,12 @@ def run(event, context):
 
         # create montage_clips
         montage_clips = []
-        for index, clips in enumerate(clips):
+        for index, clip in enumerate(clips):
             montage_clip = ts_model.MontageClip(
                 montage_id=montage.montage_id,
-                clip_id=clips.clip_id,
+                clip_id=clip.clip_id,
                 clip_order=index,
-                media_key=clips.media_key,
+                media_key=clip.media_key,
             )
             montage_clips.append(montage_clip)
 
