@@ -4,7 +4,6 @@ import ts_aws.dynamodb.montage_clip
 import ts_aws.s3
 import ts_file
 import ts_logger
-import ts_media
 import ts_model.Exception
 import ts_model.Montage
 import ts_model.MontageClip
@@ -27,6 +26,7 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
+            _status=ts_model.Status.INITIALIZING
         )
 
         # create montage_clips
@@ -46,32 +46,8 @@ def run(event, context):
             raise ts_model.Exception(ts_model.Exception.CLIPS__NOT_READY)
 
         # get clips_segments
-        clips_segments = ts_aws.dynamodb.clip.get_clips_clip_segments(clip_ids)
-        clip_id = clips_segments[0].clip_id
-        for cs in clips_segments:
-            if cs.clip_id != clip_id:
-                cs.discontinuity = True
-                clip_id = cs.clip_id
+        # clips_segments = ts_aws.dynamodb.clip.get_clips_clip_segments(clip_ids)
 
-        # create/upload m3u8
-        m3u8_filename_master = f"/tmp/playlist-master.m3u8"
-        m3u8_filename_video = f"/tmp/playlist-video.m3u8"
-        m3u8_filename_audio = f"/tmp/playlist-audio.m3u8"
-        ts_media.create_m3u8(clips_segments, m3u8_filename_master, m3u8_filename_video, m3u8_filename_audio)
-        m3u8_key_master = f"montages/{montage_id}/playlist-master.m3u8"
-        m3u8_key_video = f"montages/{montage_id}/playlist-video.m3u8"
-        m3u8_key_audio = f"montages/{montage_id}/playlist-audio.m3u8"
-        ts_aws.s3.upload_file(m3u8_filename_master, m3u8_key_master)
-        ts_aws.s3.upload_file(m3u8_filename_video, m3u8_key_video)
-        ts_aws.s3.upload_file(m3u8_filename_audio, m3u8_key_audio)
-        ts_file.delete(m3u8_filename_master)
-        ts_file.delete(m3u8_filename_video)
-        ts_file.delete(m3u8_filename_audio)
-
-        # save montage and montage_clips
-        montage.key_playlist_master = m3u8_key_master
-        montage.key_playlist_video = m3u8_key_video
-        montage.key_playlist_audio = m3u8_key_audio
         ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
         ts_aws.dynamodb.montage.save_montage(montage)
 

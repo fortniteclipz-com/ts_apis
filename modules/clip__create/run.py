@@ -32,6 +32,8 @@ def run(event, context):
         )
         ts_aws.dynamodb.clip.save_clip(clip)
 
+        # TODO: check if stream exists otherwise push to sqs.stream_initialize
+
         # send clip job to sqs
         payload = {
             'clip_id': clip.clip_id,
