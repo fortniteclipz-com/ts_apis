@@ -2,8 +2,7 @@ import run
 import json
 
 bodies = [{
-    'media_type': "clip",
-    'media_id': "c-zbFvt88cty9VhkpKqHVLDo",
+    'montage_id': "m-PjBRKetG9S43nsMhNgxU6b",
 }]
 
 for body in bodies:

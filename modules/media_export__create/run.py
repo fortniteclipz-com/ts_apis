@@ -1,5 +1,6 @@
 import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
+import ts_aws.dynamodb.montage_clip
 import ts_aws.mediaconvert
 import ts_logger
 import ts_model.Clip
@@ -19,13 +20,18 @@ def run(event, context):
         logger.info("body", body=body)
 
         if 'montage_id' in body:
+            media_type = "montage"
             media_id = body['montage_id']
             media = ts_aws.dynamodb.montage.get_montage(media_id)
-            media_type = "montage"
+            montage_clips = ts_aws.dynamodb.montage_clip.get_montage_clips(media_id)
+            clip_ids = list(map(lambda c: c.clip_id, montage_clips))
+
         elif 'clip_id' in body:
+            media_type = "clip"
             media_id = body['clip_id']
             media = ts_aws.dynamodb.clip.get_clip(media_id)
-            media_type = "clip"
+            clip_ids = [media_id]
+
         else:
             raise ts_model.Exception(ts_model.Exception.MEDIA__NOT_EXIST)
 
@@ -36,7 +42,7 @@ def run(event, context):
         if media._status_export == ts_model.Status.INITIALIZING:
             raise ts_model.Exception(ts_model.Exception.MEDIA__ALREADY_INITIALIZING)
 
-        ts_aws.mediaconvert.create_media_export(media_type, media_id)
+        ts_aws.mediaconvert.create_media_export(media_type, media_id, clip_ids)
         media._status_export = ts_model.Status.INITIALIZING
 
         if type(media) == ts_model.Clip:
