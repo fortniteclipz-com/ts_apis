@@ -3,7 +3,8 @@ import json
 
 bodies = [{
     'clip_ids': [
-        "c-Lg8SpMbfuH8LcvEUeCYbXi",
+        "c-NibQGRzhJ6ZeKktGezP4Cg",
+        "c-ikKbrkvAY6UZpdenP4S8b6",
     ],
 }]
 

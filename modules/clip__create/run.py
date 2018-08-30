@@ -1,9 +1,7 @@
 import ts_aws.dynamodb.clip
-import ts_aws.dynamodb.stream
 import ts_aws.sqs.clip
 import ts_logger
 import ts_model.Clip
-import ts_model.Exception
 import ts_model.Status
 
 import json
@@ -31,8 +29,6 @@ def run(event, context):
             _status=ts_model.Status.INITIALIZING,
         )
         ts_aws.dynamodb.clip.save_clip(clip)
-
-        # TODO: check if stream exists otherwise push to sqs.stream_initialize
 
         # send clip job to sqs
         payload = {

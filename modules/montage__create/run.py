@@ -1,8 +1,7 @@
 import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.montage_clip
-import ts_aws.s3
-import ts_file
+import ts_aws.mediaconvert.montage
 import ts_logger
 import ts_model.Exception
 import ts_model.Montage
@@ -22,6 +21,10 @@ def run(event, context):
         logger.info("body", body=body)
         clip_ids = body['clip_ids']
 
+        clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
+        if not all(c._status == ts_model.Status.READY for c in clips):
+            raise ts_model.Exception(ts_model.Exception.CLIPS__NOT_READY)
+
         # create montage
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
@@ -31,23 +34,16 @@ def run(event, context):
 
         # create montage_clips
         montage_clips = []
-        for index, clip_id in enumerate(clip_ids):
+        for index, clips in enumerate(clips):
             montage_clip = ts_model.MontageClip(
                 montage_id=montage.montage_id,
-                clip_id=clip_id,
+                clip_id=clips.clip_id,
                 clip_order=index,
+                media_key=clips.media_key,
             )
             montage_clips.append(montage_clip)
 
-        # check clips
-        clip_ids = list(map(lambda mc: mc.clip_id, montage_clips))
-        clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
-        if not all(c._status == ts_model.Status.READY for c in clips):
-            raise ts_model.Exception(ts_model.Exception.CLIPS__NOT_READY)
-
-        # get clips_segments
-        # clips_segments = ts_aws.dynamodb.clip.get_clips_clip_segments(clip_ids)
-
+        ts_aws.mediaconvert.montage.create(montage, montage_clips)
         ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
         ts_aws.dynamodb.montage.save_montage(montage)
 
