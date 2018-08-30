@@ -24,19 +24,6 @@ api--clip--get-all:
     include:
       - modules/clip__get_all/run.py
 
-api--media-export--create:
-  handler: run.run
-  module: modules/media_export__create
-  events:
-      - http:
-          path: media_export
-          method: post
-          cors: true
-          private: true
-  package:
-    include:
-      - modules/media_export__create/run.py
-
 api--montage--create:
   handler: run.run
   module: modules/montage__create
