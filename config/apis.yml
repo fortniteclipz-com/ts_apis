@@ -11,18 +11,31 @@ api--clip--create:
     include:
       - modules/clip__create/run.py
 
-api--clip--get-all:
+api--clips--get:
   handler: run.run
-  module: modules/clip__get_all
+  module: modules/clips__get
   events:
       - http:
-          path: clip
+          path: clips
           method: get
           cors: true
           private: true
   package:
     include:
-      - modules/clip__get_all/run.py
+      - modules/clips__get/run.py
+
+api--events--create:
+  handler: run.run
+  module: modules/events__create
+  events:
+      - http:
+          path: events
+          method: post
+          cors: true
+          private: true
+  package:
+    include:
+      - modules/events__create/run.py
 
 api--montage--create:
   handler: run.run
@@ -37,15 +50,15 @@ api--montage--create:
     include:
       - modules/montage__create/run.py
 
-api--montage--get-all:
+api--montages--get:
   handler: run.run
-  module: modules/montage__get_all
+  module: modules/montages__get
   events:
       - http:
-          path: montage
+          path: montages
           method: get
           cors: true
           private: true
   package:
     include:
-      - modules/montage__get_all/run.py
+      - modules/montages__get/run.py

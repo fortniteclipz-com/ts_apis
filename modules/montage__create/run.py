@@ -1,7 +1,6 @@
 import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.montage_clip
-import ts_aws.mediaconvert.montage
 import ts_aws.sqs.montage
 import ts_logger
 import ts_model.Exception
