@@ -21,16 +21,14 @@ def run(event, context):
         logger.info("body", body=body)
         clip_ids = body['clip_ids']
 
-        clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
-        if not all(c._status == ts_model.Status.READY for c in clips):
-            raise ts_model.Exception(ts_model.Exception.CLIPS__NOT_READY)
-
         # create montage
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
             _status=ts_model.Status.INITIALIZING
         )
+
+        clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
 
         # create montage_clips
         montage_clips = []
@@ -43,7 +41,6 @@ def run(event, context):
             )
             montage_clips.append(montage_clip)
 
-        ts_aws.mediaconvert.montage.create(montage, montage_clips)
         ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
         ts_aws.dynamodb.montage.save_montage(montage)
 
