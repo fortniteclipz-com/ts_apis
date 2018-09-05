@@ -13,12 +13,29 @@ def run(event, context):
         logger.info("body", body=body)
         stream_id = body['stream_id']
 
-        # send clip job to sqs
+        # get/initialize stream
+        try:
+            stream = ts_aws.dynamodb.stream.get_stream(stream_id)
+        except ts_model.Exception as e:
+            if e.code == ts_model.Exception.STREAM__NOT_EXIST:
+                logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
+                stream = ts_model.Stream(
+                    stream_id=stream_id,
+                    _status_initialize=ts_model.Status.INITIALIZING,
+                )
+                ts_aws.dynamodb.stream.save_stream(stream)
+                ts_aws.sqs.stream_initialize.send_message({
+                    'stream_id': stream_id,
+                })
+
+        # send job to stream__analyze
+        stream._status_analyze = ts_model.Status.INITIALIZING
+        ts_aws.dynamodb.stream.save_stream(stream)
         ts_aws.sqs.stream__analyze.send_message({
-            'stream_id': stream_id,
+            'stream_id': stream.stream_id,
         })
 
-        logger.info("success", clip=clip)
+        logger.info("success", stream=stream)
         return {
             'statusCode': 200,
             'headers': {

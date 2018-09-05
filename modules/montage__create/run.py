@@ -28,6 +28,7 @@ def run(event, context):
             _status=ts_model.Status.INITIALIZING
         )
 
+        # get clips
         clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
 
         # create montage_clips
@@ -41,10 +42,11 @@ def run(event, context):
             )
             montage_clips.append(montage_clip)
 
+        # save montage and montage_clips
         ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
         ts_aws.dynamodb.montage.save_montage(montage)
 
-        # send montage job to sqs
+        # send job to montage
         ts_aws.sqs.montage.send_message({
             'montage_id': montage.montage_id,
         })
