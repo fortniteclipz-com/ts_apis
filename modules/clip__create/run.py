@@ -30,6 +30,7 @@ def run(event, context):
                 stream = ts_model.Stream(
                     stream_id=stream_id,
                 )
+                ts_aws.dynamodb.stream.save_stream(stream)
 
         if stream._status_initialize == ts_model.Status.NONE:
             stream._status_initialize = ts_model.Status.INITIALIZING
