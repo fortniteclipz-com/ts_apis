@@ -29,7 +29,7 @@ api--events--create:
   module: modules/events__create
   events:
       - http:
-          path: events
+          path: stream/{stream_id}/events
           method: post
           cors: true
           private: true
