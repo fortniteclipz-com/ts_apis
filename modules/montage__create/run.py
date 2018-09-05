@@ -25,25 +25,11 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
+            clip_ids=clip_ids,
             _status=ts_model.Status.INITIALIZING
         )
 
-        # get clips
-        clips = ts_aws.dynamodb.clip.get_clips(clip_ids)
-
-        # create montage_clips
-        montage_clips = []
-        for index, clip in enumerate(clips):
-            montage_clip = ts_model.MontageClip(
-                montage_id=montage.montage_id,
-                clip_id=clip.clip_id,
-                clip_order=index,
-                media_key=clip.media_key,
-            )
-            montage_clips.append(montage_clip)
-
-        # save montage and montage_clips
-        ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
+        # save montage
         ts_aws.dynamodb.montage.save_montage(montage)
 
         # send job to montage
