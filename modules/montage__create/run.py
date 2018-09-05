@@ -2,6 +2,7 @@ import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.montage_clip
 import ts_aws.mediaconvert.montage
+import ts_aws.sqs.montage
 import ts_logger
 import ts_model.Exception
 import ts_model.Montage
@@ -43,6 +44,11 @@ def run(event, context):
 
         ts_aws.dynamodb.montage_clip.save_montage_clips(montage_clips)
         ts_aws.dynamodb.montage.save_montage(montage)
+
+        # send montage job to sqs
+        ts_aws.sqs.montage.send_message({
+            'montage_id': montage.montage_id,
+        })
 
         logger.info("success", montage=montage)
         return {
