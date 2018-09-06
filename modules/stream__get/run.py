@@ -9,8 +9,13 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
+        params = event.get('pathParameters') or {}
+        logger.info("params", params=params)
+        stream_id = int(params.get('stream_id'))
 
-        logger.info("success", clips=clips)
+        stream = ts_aws.dynamodb.stream.get_stream(stream_id)
+
+        logger.info("success", stream=stream)
         return {
             'statusCode': 200,
             'headers': {

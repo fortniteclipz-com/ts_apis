@@ -1,6 +1,6 @@
 import ts_aws.dynamodb.stream
 import ts_aws.sqs.stream__analyze
-import ts_aws.sqs.stream_initialize
+import ts_aws.sqs.stream__initialize
 import ts_logger
 import ts_model.Exception
 import ts_model.Status
@@ -14,9 +14,9 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        body = json.loads(event['body'])
-        logger.info("body", body=body)
-        stream_id = body['stream_id']
+        params = event.get('pathParameters') or {}
+        logger.info("params", params=params)
+        stream_id = int(params.get('stream_id'))
 
         # get/initialize stream
         try:
@@ -29,7 +29,7 @@ def run(event, context):
                     _status_initialize=ts_model.Status.INITIALIZING,
                 )
                 ts_aws.dynamodb.stream.save_stream(stream)
-                ts_aws.sqs.stream_initialize.send_message({
+                ts_aws.sqs.stream__initialize.send_message({
                     'stream_id': stream.stream_id,
                 })
 

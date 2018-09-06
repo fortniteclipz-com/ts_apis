@@ -1,28 +1,28 @@
-api--clip--create:
-  handler: run.run
-  module: modules/clip__create
-  events:
-      - http:
-          path: clip
-          method: post
-          cors: true
-          private: true
-  package:
-    include:
-      - modules/clip__create/run.py
+# api--clip--create:
+#   handler: run.run
+#   module: modules/clip__create
+#   events:
+#       - http:
+#           path: clip
+#           method: post
+#           cors: true
+#           private: true
+#   package:
+#     include:
+#       - modules/clip__create/run.py
 
-api--clips--get:
-  handler: run.run
-  module: modules/clips__get
-  events:
-      - http:
-          path: clips
-          method: get
-          cors: true
-          private: true
-  package:
-    include:
-      - modules/clips__get/run.py
+# api--clips--get:
+#   handler: run.run
+#   module: modules/clips__get
+#   events:
+#       - http:
+#           path: clips
+#           method: get
+#           cors: true
+#           private: true
+#   package:
+#     include:
+#       - modules/clips__get/run.py
 
 api--events--create:
   handler: run.run
@@ -37,31 +37,31 @@ api--events--create:
     include:
       - modules/events__create/run.py
 
-api--montage--create:
-  handler: run.run
-  module: modules/montage__create
-  events:
-      - http:
-          path: montage
-          method: post
-          cors: true
-          private: true
-  package:
-    include:
-      - modules/montage__create/run.py
+# api--montage--create:
+#   handler: run.run
+#   module: modules/montage__create
+#   events:
+#       - http:
+#           path: montage
+#           method: post
+#           cors: true
+#           private: true
+#   package:
+#     include:
+#       - modules/montage__create/run.py
 
-api--montages--get:
-  handler: run.run
-  module: modules/montages__get
-  events:
-      - http:
-          path: montages
-          method: get
-          cors: true
-          private: true
-  package:
-    include:
-      - modules/montages__get/run.py
+# api--montages--get:
+#   handler: run.run
+#   module: modules/montages__get
+#   events:
+#       - http:
+#           path: montages
+#           method: get
+#           cors: true
+#           private: true
+#   package:
+#     include:
+#       - modules/montages__get/run.py
 
 api--stream--get:
   handler: run.run
