@@ -62,3 +62,16 @@ api--montages--get:
   package:
     include:
       - modules/montages__get/run.py
+
+api--stream--get:
+  handler: run.run
+  module: modules/stream__get
+  events:
+      - http:
+          path: stream/{stream_id}
+          method: get
+          cors: true
+          private: true
+  package:
+    include:
+      - modules/stream__get/run.py

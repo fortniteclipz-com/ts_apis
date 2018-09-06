@@ -1,4 +1,4 @@
-import ts_aws.dynamodb.montage
+import ts_aws.dynamodb.stream
 import ts_logger
 
 import json
@@ -9,19 +9,16 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        query = event.get('queryStringParameters') or {}
-        limit = int(query.get('limit', 20))
 
-        montages = ts_aws.dynamodb.montage.get_all_montages(limit)
-
-        logger.info("success", montages=montages)
+        logger.info("success", clips=clips)
         return {
             'statusCode': 200,
             'headers': {
                 "Access-Control-Allow-Origin" : "*",
             },
             'body': json.dumps({
-                'montages': montages,
+                'stream': stream,
+
             }),
         }
 
