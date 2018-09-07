@@ -15,7 +15,11 @@ def run(event, context):
         stream_id = int(params.get('stream_id'))
 
         stream = ts_aws.dynamodb.stream.get_stream(stream_id)
-        stream_events = ts_aws.dynamodb.stream_event.get_stream_events(stream_id)
+        try:
+            stream_events = ts_aws.dynamodb.stream_event.get_stream_events(stream_id)
+        except ts_model.Exception as e:
+            if e.code == ts_model.Exception.STREAM_SEGMENTS__NOT_EXIST:
+                stream_events = []
 
         logger.info("success", stream=stream, stream_events=stream_events)
         return {
