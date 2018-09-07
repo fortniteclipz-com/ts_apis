@@ -1,4 +1,5 @@
 import ts_aws.dynamodb.stream
+import ts_aws.dynamodb.stream_event
 import ts_logger
 
 import json
@@ -14,8 +15,9 @@ def run(event, context):
         stream_id = int(params.get('stream_id'))
 
         stream = ts_aws.dynamodb.stream.get_stream(stream_id)
+        stream_events = ts_aws.dynamodb.stream_event.get_stream_events(stream_id)
 
-        logger.info("success", stream=stream)
+        logger.info("success", stream=stream, stream_events=stream_events)
         return {
             'statusCode': 200,
             'headers': {
@@ -23,6 +25,7 @@ def run(event, context):
             },
             'body': json.dumps({
                 'stream': stream,
+                'stream_events': stream_events,
 
             }),
         }
