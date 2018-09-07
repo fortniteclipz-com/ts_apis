@@ -1,6 +1,7 @@
 import ts_aws.dynamodb.stream
 import ts_aws.dynamodb.stream_event
 import ts_logger
+import ts_model.Exception
 
 import json
 import traceback
@@ -30,7 +31,6 @@ def run(event, context):
             'body': json.dumps({
                 'stream': stream,
                 'stream_events': stream_events,
-
             }),
         }
 
