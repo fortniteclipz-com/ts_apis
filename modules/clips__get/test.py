@@ -1,8 +1,10 @@
 import run
-import json
 
-bodies = [{}]
+parameters = [{
+    'limit': '50',
+}]
 
-for body in bodies:
-    event = {'Records': [{'body': json.dumps(body)}]}
+for params in parameters:
+    event = {'queryStringParameters': params}
     run.run(event, {})
+
