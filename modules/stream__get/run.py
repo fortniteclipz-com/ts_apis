@@ -1,5 +1,5 @@
 import ts_aws.dynamodb.stream
-import ts_aws.dynamodb.stream_event
+import ts_aws.dynamodb.stream_moment
 import ts_logger
 import ts_model.Exception
 
@@ -17,12 +17,12 @@ def run(event, context):
 
         stream = ts_aws.dynamodb.stream.get_stream(stream_id)
         try:
-            stream_events = ts_aws.dynamodb.stream_event.get_stream_events(stream_id)
+            stream_moments = ts_aws.dynamodb.stream_moment.get_stream_moments(stream_id)
         except ts_model.Exception as e:
             if e.code == ts_model.Exception.STREAM_SEGMENTS__NOT_EXIST:
-                stream_events = []
+                stream_moments = []
 
-        logger.info("success", stream=stream, stream_events=stream_events)
+        logger.info("success", stream=stream, stream_moments=stream_moments)
         return {
             'statusCode': 200,
             'headers': {
@@ -30,7 +30,7 @@ def run(event, context):
             },
             'body': json.dumps({
                 'stream': stream,
-                'stream_events': stream_events,
+                'stream_moments': stream_moments,
             }),
         }
 
