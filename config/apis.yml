@@ -24,18 +24,18 @@ api--clips--get:
     include:
       - modules/clips__get/run.py
 
-api--events--create:
+api--moments--create:
   handler: run.run
-  module: modules/events__create
+  module: modules/moments__create
   events:
       - http:
-          path: stream/{stream_id}/events
+          path: stream/{stream_id}/moments
           method: post
           cors: true
           private: true
   package:
     include:
-      - modules/events__create/run.py
+      - modules/moments__create/run.py
 
 api--montage--create:
   handler: run.run
