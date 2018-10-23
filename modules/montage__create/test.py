@@ -3,7 +3,7 @@ import json
 
 bodies = [{
     'clips': [{
-        'clip_id': 'c-zAXdUjbxFDjUXbDHtPfWR3',
+        'clip_id': 'c-3G4kwkd7PPCkjpVszoHjVd',
     } , {
         'stream_id': 311038404,
         'time_in': 1593.699742,

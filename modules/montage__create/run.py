@@ -21,9 +21,15 @@ def run(event, context):
         logger.info("body", body=body)
         clips = body['clips']
 
+        montage_duration = 0;
+        _clip_ids = list(map(lambda c: c['clip_id'], filter(lambda c: True if 'clip_id' in c else False, clips)))
+        _clips = ts_aws.dynamodb.clip.get_clips(_clip_ids)
+
         def get_clip_id(clip):
+            nonlocal montage_duration
             if 'clip_id' in clip:
-                return clip['clip_id']
+                clip = [c for c in _clips if c.clip_id == clip['clip_id']][0]
+
             else:
                 stream_id = clip['stream_id']
                 time_in = clip['time_in']
@@ -65,7 +71,8 @@ def run(event, context):
                     'clip_id': clip.clip_id,
                 })
 
-                return clip_id
+            montage_duration += clip.time_out - clip.time_in
+            return clip.clip_id
 
         clip_ids = list(map(get_clip_id, clips))
 
@@ -73,6 +80,7 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
+            duration=montage_duration,
             clip_ids=clip_ids,
             _status=ts_model.Status.INITIALIZING
         )
