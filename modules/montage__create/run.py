@@ -22,8 +22,11 @@ def run(event, context):
         clips = body['clips']
 
         montage_duration = 0;
+
         _clip_ids = list(map(lambda c: c['clip_id'], filter(lambda c: True if 'clip_id' in c else False, clips)))
-        _clips = ts_aws.dynamodb.clip.get_clips(_clip_ids)
+        _clips = []
+        if (len(_clip_ids)):
+            _clips = ts_aws.dynamodb.clip.get_clips(_clip_ids)
 
         def get_clip_id(clip):
             nonlocal montage_duration
