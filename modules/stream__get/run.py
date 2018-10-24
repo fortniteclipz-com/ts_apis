@@ -1,5 +1,6 @@
 import ts_aws.dynamodb.stream
 import ts_aws.dynamodb.stream_moment
+import ts_aws.dynamodb.stream_segment
 import ts_logger
 import ts_model.Exception
 
@@ -17,10 +18,20 @@ def run(event, context):
 
         stream = ts_aws.dynamodb.stream.get_stream(stream_id)
         try:
-            stream_moments = ts_aws.dynamodb.stream_moment.get_stream_moments(stream_id)
+            stream_moments = ts_aws.dynamodb.stream_moment.get_stream_moments(stream.stream_id)
         except ts_model.Exception as e:
-            if e.code == ts_model.Exception.STREAM_SEGMENTS__NOT_EXIST:
+            if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
                 stream_moments = []
+
+        if stream._status_analyze == ts_model.Status.INITIALIZING:
+            try:
+                stream_segments = ts_aws.dynamodb.stream_segment.get_stream_segments(stream.stream_id)
+            except ts_model.Exception as e:
+                if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
+                    stream_segments = []
+
+            analyzed_stream_segments = list(filter(lambda ss: ss._status_analyze == ts_model.Status.READY, stream_segments))
+            stream._status_analyze_percentage = len(analyzed_stream_segments) / len(stream_segments) * 100
 
         logger.info("success", stream=stream, stream_moments=stream_moments)
         return {
