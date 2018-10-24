@@ -22,6 +22,7 @@ def run(event, context):
         clips = body['clips']
 
         montage_duration = 0;
+        montage_stream_id = None;
 
         _clip_ids = list(map(lambda c: c['clip_id'], filter(lambda c: True if 'clip_id' in c else False, clips)))
         _clips = []
@@ -30,6 +31,7 @@ def run(event, context):
 
         def get_clip_id(clip):
             nonlocal montage_duration
+            nonlocal montage_stream_id
             if 'clip_id' in clip:
                 clip = [c for c in _clips if c.clip_id == clip['clip_id']][0]
 
@@ -75,6 +77,7 @@ def run(event, context):
                 })
 
             montage_duration += clip.time_out - clip.time_in
+            montage_stream_id = clip.stream_id
             return clip.clip_id
 
         clip_ids = list(map(get_clip_id, clips))
@@ -83,6 +86,7 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
+            stream_id=montage_stream_id,
             duration=montage_duration,
             clip_ids=clip_ids,
             _status=ts_model.Status.INITIALIZING
