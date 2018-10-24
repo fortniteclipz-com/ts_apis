@@ -75,3 +75,16 @@ api--stream--get:
   package:
     include:
       - modules/stream__get/run.py
+
+api--streams--get:
+  handler: run.run
+  module: modules/streams__get
+  events:
+      - http:
+          path: streams
+          method: get
+          cors: true
+          private: true
+  package:
+    include:
+      - modules/streams__get/run.py
