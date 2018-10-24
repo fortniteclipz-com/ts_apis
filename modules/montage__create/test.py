@@ -2,10 +2,12 @@ import run
 import json
 
 bodies = [{
+    'stream_user': 'test_stream_user',
+    'stream_id': 311038404,
     'clips': [{
-        'clip_id': 'c-3G4kwkd7PPCkjpVszoHjVd',
+        'time_in': 1593.699742,
+        'time_out': 1598.455016,
     } , {
-        'stream_id': 311038404,
         'time_in': 1593.699742,
         'time_out': 1598.455016,
     }],
