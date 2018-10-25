@@ -18,6 +18,11 @@ def run(event, context):
         logger.info("params", params=params)
         stream_id = int(params.get('stream_id'))
 
+        stream_jobs = {
+            'initialize': False,
+            'analyze': False,
+        }
+
         # get/initialize stream
         try:
             stream = ts_aws.dynamodb.stream.get_stream(stream_id)
@@ -26,22 +31,33 @@ def run(event, context):
                 logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
                 stream = ts_model.Stream(
                     stream_id=stream_id,
-                    _status_initialize=ts_model.Status.INITIALIZING,
                 )
-                ts_aws.dynamodb.stream.save_stream(stream)
-                ts_aws.sqs.stream__initialize.send_message({
-                    'stream_id': stream.stream_id,
-                })
 
         if stream._status_analyze == ts_model.Status.READY:
             raise ts_model.Exception(ts_model.Exception.STREAM__ALREADY_ANALYZED)
 
-        # send job to stream__analyze
-        stream._status_analyze = ts_model.Status.INITIALIZING
+        if stream._status_initialize == ts_model.Status.NONE:
+            stream._status_initialize = ts_model.Status.INITIALIZING
+            stream_jobs['initialize'] = True
+
+        if stream._status_analyze == ts_model.Status.NONE:
+            stream._status_analyze = ts_model.Status.INITIALIZING
+            stream_jobs['analyze'] = True
+
+
         ts_aws.dynamodb.stream.save_stream(stream)
-        ts_aws.sqs.stream__analyze.send_message({
-            'stream_id': stream.stream_id,
-        })
+
+        # send job to stream__analyze
+        if stream_jobs['initialize']:
+            ts_aws.sqs.stream__analyze.send_message({
+                'stream_id': stream.stream_id,
+            })
+
+        # send job to stream__initialize
+        if stream_jobs['analyze']:
+            ts_aws.sqs.stream__initialize.send_message({
+                'stream_id': stream.stream_id,
+            })
 
         logger.info("success", stream=stream)
         return {
