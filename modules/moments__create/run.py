@@ -47,15 +47,15 @@ def run(event, context):
 
         ts_aws.dynamodb.stream.save_stream(stream)
 
-        # send job to stream__analyze
+        # send job to stream__initialize
         if stream_jobs['initialize']:
-            ts_aws.sqs.stream__analyze.send_message({
+            ts_aws.sqs.stream__initialize.send_message({
                 'stream_id': stream.stream_id,
             })
 
-        # send job to stream__initialize
+        # send job to stream__analyze
         if stream_jobs['analyze']:
-            ts_aws.sqs.stream__initialize.send_message({
+            ts_aws.sqs.stream__analyze.send_message({
                 'stream_id': stream.stream_id,
             })
 
