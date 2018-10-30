@@ -20,7 +20,6 @@ def run(event, context):
         body = json.loads(event['body'])
         logger.info("body", body=body)
         clips = body['clips']
-        stream_user = body['stream_user']
         stream_id = body['stream_id']
 
         montage_duration = 0;
@@ -51,7 +50,7 @@ def run(event, context):
             clip_id = f"c-{shortuuid.uuid()}"
             clip = ts_model.Clip(
                 clip_id=clip_id,
-                stream_id=stream_id,
+                stream_id=stream.stream_id,
                 time_in=time_in,
                 time_out=time_out,
                 _status=ts_model.Status.INITIALIZING,
@@ -74,8 +73,8 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
-            stream_user=stream_user,
-            stream_id=stream_id,
+            stream_id=stream.stream_id,
+            stream_user=stream.user,
             duration=montage_duration,
             clip_ids=clip_ids,
             _status=ts_model.Status.INITIALIZING
