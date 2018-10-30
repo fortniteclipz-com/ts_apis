@@ -16,7 +16,7 @@ def run(event, context):
         logger.info("start", event=event, context=context)
         params = event.get('pathParameters') or {}
         logger.info("params", params=params)
-        stream_id = int(params.get('stream_id'))
+        stream_id = params.get('stream_id')
 
         stream_jobs = {
             'initialize': False,
