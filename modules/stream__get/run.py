@@ -30,8 +30,9 @@ def run(event, context):
                 if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
                     stream_segments = []
 
+            downloaded_stream_segments = list(filter(lambda ss: ss._status_download == ts_model.Status.READY, stream_segments))
             analyzed_stream_segments = list(filter(lambda ss: ss._status_analyze == ts_model.Status.READY, stream_segments))
-            stream._status_analyze_percentage = len(analyzed_stream_segments) / len(stream_segments) * 100
+            stream._status_analyze_percentage = (len(downloaded_stream_segments) + len(analyzed_stream_segments)) / (len(stream_segments) * 2) * 100
 
         logger.info("success", stream=stream, stream_moments=stream_moments)
         return {
