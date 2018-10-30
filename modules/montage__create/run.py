@@ -22,29 +22,29 @@ def run(event, context):
         clips = body['clips']
         stream_id = body['stream_id']
 
+        # get/initialize stream
+        try:
+            stream = ts_aws.dynamodb.stream.get_stream(stream_id)
+        except ts_model.Exception as e:
+            if e.code == ts_model.Exception.STREAM__NOT_EXIST:
+                logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
+                stream = ts_model.Stream(
+                    stream_id=stream_id,
+                )
+                ts_aws.dynamodb.stream.save_stream(stream)
+
+        if stream._status_initialize == ts_model.Status.NONE:
+            stream._status_initialize = ts_model.Status.INITIALIZING
+            ts_aws.dynamodb.stream.save_stream(stream)
+            ts_aws.sqs.stream__initialize.send_message({
+                'stream_id': stream.stream_id,
+            })
+
         montage_duration = 0;
         def create_clips(_clip):
             nonlocal montage_duration
             time_in = _clip['time_in']
             time_out = _clip['time_out']
-
-            # get/initialize stream
-            try:
-                stream = ts_aws.dynamodb.stream.get_stream(stream_id)
-            except ts_model.Exception as e:
-                if e.code == ts_model.Exception.STREAM__NOT_EXIST:
-                    logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
-                    stream = ts_model.Stream(
-                        stream_id=stream_id,
-                    )
-                    ts_aws.dynamodb.stream.save_stream(stream)
-
-            if stream._status_initialize == ts_model.Status.NONE:
-                stream._status_initialize = ts_model.Status.INITIALIZING
-                ts_aws.dynamodb.stream.save_stream(stream)
-                ts_aws.sqs.stream__initialize.send_message({
-                    'stream_id': stream.stream_id,
-                })
 
             # create clip
             clip_id = f"c-{shortuuid.uuid()}"
