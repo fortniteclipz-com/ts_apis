@@ -13,9 +13,9 @@ provider:
 
   memorySize: 128
   timeout: 30
-  apiName: twitchStitch
+  apiName: TwitchStitch
   apiKeys:
-    - tsApiKey
+    - TwitchStitchApiKey
 
 package:
   individually: true
