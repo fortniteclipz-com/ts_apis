@@ -14,8 +14,6 @@ provider:
   memorySize: 128
   timeout: 30
   apiName: twitch-stitch-${self:custom.config.stage}
-  apiKeys:
-    - twitch-stitch-api-key-${self:custom.config.stage}
 
 package:
   individually: true
