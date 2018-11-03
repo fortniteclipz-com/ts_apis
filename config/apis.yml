@@ -1,28 +1,30 @@
-api--clip--create:
-  handler: run.run
-  module: modules/clip__create
-  events:
-      - http:
-          path: clip
-          method: post
-          cors: true
-          private: true
-  package:
-    include:
-      - modules/clip__create/run.py
+# api--clip--create:
+#   handler: run.run
+#   module: modules/clip__create
+#   events:
+#       - http:
+#           path: clip
+#           method: post
+#           cors: true
+#           authorizer:
+#             arn: ${self:custom.config.cognito.arn}
+#   package:
+#     include:
+#       - modules/clip__create/run.py
 
-api--clips--get:
-  handler: run.run
-  module: modules/clips__get
-  events:
-      - http:
-          path: clips
-          method: get
-          cors: true
-          private: true
-  package:
-    include:
-      - modules/clips__get/run.py
+# api--clips--get:
+#   handler: run.run
+#   module: modules/clips__get
+#   events:
+#       - http:
+#           path: clips
+#           method: get
+#           cors: true
+#           authorizer:
+#             arn: ${self:custom.config.cognito.arn}
+#   package:
+#     include:
+#       - modules/clips__get/run.py
 
 api--moments--create:
   handler: run.run
@@ -32,7 +34,8 @@ api--moments--create:
           path: stream/{stream_id}/moments
           method: post
           cors: true
-          private: true
+          authorizer:
+            arn: ${self:custom.config.cognito.arn}
   package:
     include:
       - modules/moments__create/run.py
@@ -45,7 +48,8 @@ api--montage--create:
           path: montage
           method: post
           cors: true
-          private: true
+          authorizer:
+            arn: ${self:custom.config.cognito.arn}
   package:
     include:
       - modules/montage__create/run.py
@@ -58,7 +62,8 @@ api--montages--get:
           path: montages
           method: get
           cors: true
-          private: true
+          authorizer:
+            arn: ${self:custom.config.cognito.arn}
   package:
     include:
       - modules/montages__get/run.py
@@ -71,7 +76,6 @@ api--stream--get:
           path: stream/{stream_id}
           method: get
           cors: true
-          private: true
   package:
     include:
       - modules/stream__get/run.py
@@ -84,7 +88,6 @@ api--streams--get:
           path: streams
           method: get
           cors: true
-          private: true
   package:
     include:
       - modules/streams__get/run.py
