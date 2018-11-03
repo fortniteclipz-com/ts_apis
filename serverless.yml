@@ -3,19 +3,19 @@ service: ts-api
 provider:
   name: aws
   profile: serverless-admin
-  region: ${self:custom.config.aws.region}
+  region: ${self:custom.config.region}
   runtime: python3.6
-  stage: dev
+  stage: ${self:custom.config.stage}
   versionFunctions: false
 
   iamRoleStatements:
-    ${self:custom.config.aws.iam.role-statement}
+    ${self:custom.config.iam.role-statement}
 
   memorySize: 128
   timeout: 30
-  apiName: TwitchStitch
+  apiName: twitch-stitch-${self:custom.config.stage}
   apiKeys:
-    - TwitchStitchApiKey
+    - twitch-stitch-api-key-${self:custom.config.stage}
 
 package:
   individually: true
