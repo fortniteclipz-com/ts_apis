@@ -62,8 +62,6 @@ api--montages--get:
           path: montages
           method: get
           cors: true
-          authorizer:
-            arn: ${self:custom.config.cognito.arn}
   package:
     include:
       - modules/montages__get/run.py
