@@ -7,7 +7,7 @@
 #           method: post
 #           cors: true
 #           authorizer:
-#             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/us-west-2_SeAkMOMPt
+#             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
 #   package:
 #     include:
 #       - modules/clip__create/run.py
@@ -21,7 +21,7 @@
 #           method: get
 #           cors: true
 #           authorizer:
-#             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/us-west-2_SeAkMOMPt
+#             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
 #   package:
 #     include:
 #       - modules/clips__get/run.py
@@ -35,7 +35,7 @@ api--moments--create:
           method: post
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/us-west-2_SeAkMOMPt
+            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
   package:
     include:
       - modules/moments__create/run.py
@@ -49,7 +49,7 @@ api--montage--create:
           method: post
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/us-west-2_SeAkMOMPt
+            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
   package:
     include:
       - modules/montage__create/run.py
