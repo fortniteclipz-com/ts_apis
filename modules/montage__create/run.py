@@ -1,7 +1,6 @@
 import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.stream
-import ts_aws.dynamodb.user_clip
 import ts_aws.dynamodb.user_montage
 import ts_aws.sqs.clip
 import ts_aws.sqs.montage
@@ -9,7 +8,6 @@ import ts_aws.sqs.stream__initialize
 import ts_logger
 import ts_model.Montage
 import ts_model.Status
-import ts_model.UserClip
 import ts_model.UserMontage
 
 import json
@@ -47,7 +45,6 @@ def run(event, context):
             })
 
         montage_duration = 0;
-        user_clips = []
         def get_clips(_clip):
             nonlocal montage_duration
             time_in = _clip['time_in']
@@ -61,13 +58,6 @@ def run(event, context):
                 time_out=time_out,
                 _status=ts_model.Status.INITIALIZING,
             )
-            user_clips.append(
-                ts_model.UserClip(
-                    user_id=user_id,
-                    clip_id=clip.clip_id,
-                    created=created,
-                )
-            )
 
             montage_duration += clip.time_out - clip.time_in
             return clip
@@ -75,7 +65,6 @@ def run(event, context):
         clips = list(map(get_clips, clips))
 
         ts_aws.dynamodb.clip.save_clips(clips)
-        ts_aws.dynamodb.user_clip.save_user_clips(user_clips)
 
         def create_clips(_clip):
             ts_aws.sqs.clip.send_message({
