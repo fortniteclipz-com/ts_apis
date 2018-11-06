@@ -1,12 +1,16 @@
 import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.stream
+import ts_aws.dynamodb.user_clip
+import ts_aws.dynamodb.user_montage
 import ts_aws.sqs.clip
 import ts_aws.sqs.montage
 import ts_aws.sqs.stream__initialize
 import ts_logger
 import ts_model.Montage
 import ts_model.Status
+import ts_model.UserClip
+import ts_model.UserMontage
 
 import json
 import shortuuid
@@ -21,6 +25,7 @@ def run(event, context):
         logger.info("body", body=body)
         clips = body['clips']
         stream_id = body['stream_id']
+        created = datetime.utcnow().isoformat()
 
         # get/initialize stream
         try:
@@ -41,12 +46,12 @@ def run(event, context):
             })
 
         montage_duration = 0;
-        def create_clips(_clip):
+        user_clips = []
+        def get_clips(_clip):
             nonlocal montage_duration
             time_in = _clip['time_in']
             time_out = _clip['time_out']
 
-            # create clip
             clip_id = f"c-{shortuuid.uuid()}"
             clip = ts_model.Clip(
                 clip_id=clip_id,
@@ -55,16 +60,26 @@ def run(event, context):
                 time_out=time_out,
                 _status=ts_model.Status.INITIALIZING,
             )
+            user_clips.append(
+                ts_model.UserClip(
+                    user_id=user_id,
+                    clip_id=clip.clip_id,
+                    created=created,
+                )
+            )
 
-            # save clip
-            ts_aws.dynamodb.clip.save_clip(clip)
+            montage_duration += clip.time_out - clip.time_in
+            return clip
 
-            # send job to clip
+        clips = list(map(get_clips, clips))
+
+        ts_aws.dynamodb.clip.save_clips(clips)
+        ts_aws.dynamodb.user_clip.save_user_clips(user_clips)
+
+        def create_clips(_clip):
             ts_aws.sqs.clip.send_message({
                 'clip_id': clip.clip_id,
             })
-
-            montage_duration += clip.time_out - clip.time_in
             return clip.clip_id
 
         clip_ids = list(map(create_clips, clips))
@@ -79,9 +94,15 @@ def run(event, context):
             clip_ids=clip_ids,
             _status=ts_model.Status.INITIALIZING
         )
+        user_montage = ts_model.UserMontage(
+            user_id=user_id,
+            montage_id=montage.montage_id,
+            created=created,
+        )
 
-        # save montage
+        # save montage and user_montage
         ts_aws.dynamodb.montage.save_montage(montage)
+        ts_aws.dynamodb.user_montage.save_user_montage(user_montage)
 
         # send job to montage
         ts_aws.sqs.montage.send_message({

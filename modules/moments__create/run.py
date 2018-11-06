@@ -44,7 +44,6 @@ def run(event, context):
             stream._status_analyze = ts_model.Status.INITIALIZING
             stream_jobs['analyze'] = True
 
-
         ts_aws.dynamodb.stream.save_stream(stream)
 
         # send job to stream__initialize
