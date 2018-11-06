@@ -10,6 +10,7 @@ import ts_model.Montage
 import ts_model.Status
 import ts_model.UserMontage
 
+import datetime
 import json
 import shortuuid
 import traceback
@@ -22,9 +23,9 @@ def run(event, context):
         user_id = event['requestContext']['authorizer']['claims']['cognito:username']
         body = json.loads(event['body'])
         logger.info("body", body=body)
-        clips = body['clips']
         stream_id = body['stream_id']
-        created = datetime.utcnow().isoformat()
+        clips = body['clips']
+        created = datetime.datetime.utcnow().isoformat()
 
         # get/initialize stream
         try:
