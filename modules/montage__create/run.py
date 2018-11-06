@@ -27,7 +27,6 @@ def run(event, context):
         clips = body['clips']
         created = datetime.datetime.utcnow().isoformat()
 
-        # get/initialize stream
         try:
             stream = ts_aws.dynamodb.stream.get_stream(stream_id)
         except ts_model.Exception as e:
@@ -69,13 +68,12 @@ def run(event, context):
 
         def create_clips(_clip):
             ts_aws.sqs.clip.send_message({
-                'clip_id': clip.clip_id,
+                'clip_id': _clip.clip_id,
             })
-            return clip.clip_id
+            return _clip.clip_id
 
         clip_ids = list(map(create_clips, clips))
 
-        # create montage
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
@@ -91,11 +89,9 @@ def run(event, context):
             created=created,
         )
 
-        # save montage and user_montage
         ts_aws.dynamodb.montage.save_montage(montage)
         ts_aws.dynamodb.user_montage.save_user_montage(user_montage)
 
-        # send job to montage
         ts_aws.sqs.montage.send_message({
             'montage_id': montage.montage_id,
         })

@@ -23,7 +23,6 @@ def run(event, context):
             'analyze': False,
         }
 
-        # get/initialize stream
         try:
             stream = ts_aws.dynamodb.stream.get_stream(stream_id)
         except ts_model.Exception as e:
@@ -46,13 +45,11 @@ def run(event, context):
 
         ts_aws.dynamodb.stream.save_stream(stream)
 
-        # send job to stream__initialize
         if stream_jobs['initialize']:
             ts_aws.sqs.stream__initialize.send_message({
                 'stream_id': stream.stream_id,
             })
 
-        # send job to stream__analyze
         if stream_jobs['analyze']:
             ts_aws.sqs.stream__analyze.send_message({
                 'stream_id': stream.stream_id,

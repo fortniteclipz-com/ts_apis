@@ -22,6 +22,8 @@ bodies = [{
 }]
 
 for body in bodies:
-    event = {'body': json.dumps(body)}
+    event = {
+        'body': json.dumps(body),
+        'requestContext': {'authorizer': {'claims': {'cognito:username': 'development_test_username'}}}}
     run.run(event, {})
 
