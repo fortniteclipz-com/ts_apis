@@ -1,7 +1,7 @@
 import run
 
 parameters = [{
-    'limit': '50',
+    'limit': "50",
 }]
 
 for params in parameters:
