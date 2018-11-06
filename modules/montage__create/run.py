@@ -21,6 +21,7 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
+        user_id = event['requestContext']['authorizer']['claims']['cognito:username']
         body = json.loads(event['body'])
         logger.info("body", body=body)
         clips = body['clips']

@@ -1,31 +1,3 @@
-# api--clip--create:
-#   handler: run.run
-#   module: modules/clip__create
-#   events:
-#       - http:
-#           path: clip
-#           method: post
-#           cors: true
-#           authorizer:
-#             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
-#   package:
-#     include:
-#       - modules/clip__create/run.py
-
-# api--clips--get:
-#   handler: run.run
-#   module: modules/clips__get
-#   events:
-#       - http:
-#           path: clips
-#           method: get
-#           cors: true
-#           authorizer:
-#             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
-#   package:
-#     include:
-#       - modules/clips__get/run.py
-
 api--moments--create:
   handler: run.run
   module: modules/moments__create
@@ -62,6 +34,8 @@ api--montages--get:
           path: montages
           method: get
           cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
   package:
     include:
       - modules/montages__get/run.py
