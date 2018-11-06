@@ -40,6 +40,18 @@ api--montages--get:
     include:
       - modules/montages__get/run.py
 
+api--montages--get-recent:
+  handler: run.run
+  module: modules/montages__get_recent
+  events:
+      - http:
+          path: montages/recent
+          method: get
+          cors: true
+  package:
+    include:
+      - modules/montages__get_recent/run.py
+
 api--stream--get:
   handler: run.run
   module: modules/stream__get

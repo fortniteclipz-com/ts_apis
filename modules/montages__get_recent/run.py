@@ -9,7 +9,7 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        montages = ts_aws.dynamodb.montage.get_user_recent_montages(user_id)
+        montages = ts_aws.dynamodb.montage.get_recent_montages(user_id)
         logger.info("success", montages=montages)
         return {
             'statusCode': 200,
