@@ -1,16 +1,13 @@
 import ts_aws.dynamodb.clip
 import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.stream
-import ts_aws.dynamodb.user_montage
 import ts_aws.sqs.clip
 import ts_aws.sqs.montage
 import ts_aws.sqs.stream__initialize
 import ts_logger
 import ts_model.Montage
 import ts_model.Status
-import ts_model.UserMontage
 
-import datetime
 import json
 import shortuuid
 import traceback
@@ -25,7 +22,6 @@ def run(event, context):
         logger.info("body", body=body)
         stream_id = body['stream_id']
         clips = body['clips']
-        created = datetime.datetime.utcnow().isoformat()
 
         try:
             stream = ts_aws.dynamodb.stream.get_stream(stream_id)
@@ -83,14 +79,8 @@ def run(event, context):
             clip_ids=clip_ids,
             _status=ts_model.Status.INITIALIZING
         )
-        user_montage = ts_model.UserMontage(
-            user_id=user_id,
-            montage_id=montage.montage_id,
-            created=created,
-        )
 
         ts_aws.dynamodb.montage.save_montage(montage)
-        ts_aws.dynamodb.user_montage.save_user_montage(user_montage)
 
         ts_aws.sqs.montage.send_message({
             'montage_id': montage.montage_id,

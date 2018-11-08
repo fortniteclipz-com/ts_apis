@@ -1,5 +1,4 @@
-import ts_aws.dynamodb.montage
-import ts_aws.dynamodb.user_montage
+import ts_aws.dynamodb.recent
 import ts_logger
 
 import json
@@ -10,14 +9,7 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-
-        user_montages = ts_aws.dynamodb.user_montage.get_all_user_montages()
-        montage_ids = list(map(lambda um: um.montage_id, user_montages))
-        montages = []
-        if len(montage_ids):
-            montages = ts_aws.dynamodb.montage.get_montages(montage_ids)
-            montages.sort(key=lambda m: montage_ids.index(m.montage_id))
-
+        montages = ts_aws.dynamodb.recent.get_montages()
         logger.info("success", montages=montages)
         return {
             'statusCode': 200,

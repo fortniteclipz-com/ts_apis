@@ -1,4 +1,4 @@
-import ts_aws.dynamodb.stream
+import ts_aws.dynamodb.recent
 import ts_logger
 
 import json
@@ -9,7 +9,7 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        streams = ts_aws.dynamodb.stream.get_recent_streams()
+        streams = ts_aws.dynamodb.recent.get_streams()
         logger.info("success", streams=streams)
         return {
             'statusCode': 200,

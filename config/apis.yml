@@ -64,14 +64,14 @@ api--stream--get:
     include:
       - modules/stream__get/run.py
 
-api--streams--get:
+api--streams--get-recent:
   handler: run.run
-  module: modules/streams__get
+  module: modules/streams__get_recent
   events:
       - http:
-          path: streams
+          path: streams/recent
           method: get
           cors: true
   package:
     include:
-      - modules/streams__get/run.py
+      - modules/streams__get_recent/run.py
