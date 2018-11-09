@@ -1,3 +1,4 @@
+import ts_aws.dynamodb.montage
 import ts_aws.dynamodb.recent
 import ts_logger
 
@@ -9,7 +10,11 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        montages = ts_aws.dynamodb.recent.get_montages()
+        recent_montage = ts_aws.dynamodb.recent.get_montage()
+        montages = []
+        if len(recent_montage.media_ids):
+            montages = ts_aws.dynamodb.montage.get_montages(recent_montage.media_ids)
+            montages.sort(key=lambda m: recent_montage.media_ids.index(m.montage_id))
         logger.info("success", montages=montages)
         return {
             'statusCode': 200,
