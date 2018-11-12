@@ -12,9 +12,9 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        params = event.get('pathParameters') or {}
+        params = event['pathParameters']
         logger.info("params", params=params)
-        stream_id = params.get('stream_id')
+        stream_id = params['stream_id']
 
         stream = ts_aws.dynamodb.stream.get_stream(stream_id)
         try:
@@ -33,6 +33,7 @@ def run(event, context):
             downloaded_stream_segments = list(filter(lambda ss: ss._status_download == ts_model.Status.READY, stream_segments))
             analyzed_stream_segments = list(filter(lambda ss: ss._status_analyze == ts_model.Status.READY, stream_segments))
             stream._status_analyze_percentage = (len(downloaded_stream_segments) + len(analyzed_stream_segments)) / (len(stream_segments) * 2) * 100
+            stream._status_analyze_percentage = 99 if stream._status_analyze_percentage > 99 else stream._status_analyze_percentage
 
         logger.info("success", stream=stream, stream_moments=stream_moments)
         return {

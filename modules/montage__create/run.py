@@ -8,6 +8,7 @@ import ts_logger
 import ts_model.Montage
 import ts_model.Status
 
+import datetime
 import json
 import shortuuid
 import traceback
@@ -73,11 +74,13 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage = ts_model.Montage(
             montage_id=montage_id,
+            user_id=user_id,
             stream_id=stream.stream_id,
-            stream_user=stream.user,
+            streamer=stream.streamer,
             duration=montage_duration,
             clip_ids=clip_ids,
-            _status=ts_model.Status.INITIALIZING
+            created=datetime.datetime.utcnow().isoformat(),
+            _status=ts_model.Status.INITIALIZING,
         )
 
         ts_aws.dynamodb.montage.save_montage(montage)

@@ -14,9 +14,13 @@ logger = ts_logger.get(__name__)
 def run(event, context):
     try:
         logger.info("start", event=event, context=context)
-        params = event.get('pathParameters') or {}
+        params = event['pathParameters']
         logger.info("params", params=params)
-        stream_id = params.get('stream_id')
+        stream_id = params['stream_id']
+        body = json.loads(event['body'])
+        logger.info("body", body=body)
+        game = body['game']
+        game = 'fortnite'
 
         stream_jobs = {
             'initialize': False,
@@ -43,6 +47,7 @@ def run(event, context):
             stream._status_analyze = ts_model.Status.INITIALIZING
             stream_jobs['analyze'] = True
 
+        stream.game = game
         ts_aws.dynamodb.stream.save_stream(stream)
 
         if stream_jobs['initialize']:
