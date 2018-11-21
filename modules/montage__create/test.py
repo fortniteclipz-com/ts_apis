@@ -2,13 +2,13 @@ import run
 import json
 
 bodies = [{
-    'stream_id': "308990189",
+    'stream_id': "335886831",
     'clips': [{
-        'time_in': 1941,
-        'time_out': 1947,
+        'time_in': 473,
+        'time_out': 479,
     }, {
-        'time_in': 1966,
-        'time_out': 1971,
+        'time_in': 606,
+        'time_out': 612,
     # }, {
     #     'time_in': 2304,
     #     'time_out': 2310,
@@ -24,7 +24,7 @@ bodies = [{
 for body in bodies:
     event = {
         'body': json.dumps(body),
-        'requestContext': {'authorizer': {'claims': {'cognito:username': 'development_test_username'}}}
+        'requestContext': {'authorizer': {'claims': {'cognito:username': 'development-test-username'}}}
     }
     run.run(event, {})
 
