@@ -20,7 +20,9 @@ def run(event, context):
         body = json.loads(event['body'])
         logger.info("body", body=body)
         game = body['game']
-        game = 'fortnite'
+
+        if game != 'fortnite':
+            raise ts_model.Exception(ts_model.Exception.STREAM__GAME_NOT_SUPPORTED)
 
         stream_jobs = {
             'initialize': False,
