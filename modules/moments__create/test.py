@@ -1,10 +1,16 @@
 import run
+import json
 
 parameters = [{
-    'stream_id': "308990189",
+    'stream_id': "335886831",
 }]
 
 for params in parameters:
-    event = {'pathParameters': params}
+    event = {
+        'pathParameters': params,
+        'body': json.dumps({
+            'game': 'fortnite',
+        })
+    }
     run.run(event, {})
 

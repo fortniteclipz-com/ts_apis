@@ -1,4 +1,4 @@
-import ts_aws.dynamodb.stream
+import ts_aws.rds.stream
 import ts_aws.sqs.stream__analyze
 import ts_aws.sqs.stream__initialize
 import ts_logger
@@ -30,7 +30,7 @@ def run(event, context):
         }
 
         try:
-            stream = ts_aws.dynamodb.stream.get_stream(stream_id)
+            stream = ts_aws.rds.stream.get_stream(stream_id)
         except ts_model.Exception as e:
             if e.code == ts_model.Exception.STREAM__NOT_EXIST:
                 logger.error("warn", _module=f"{e.__class__.__module__}", _class=f"{e.__class__.__name__}", _message=str(e), traceback=''.join(traceback.format_exc()))
@@ -50,7 +50,7 @@ def run(event, context):
             stream_jobs['analyze'] = True
 
         stream.game = game
-        ts_aws.dynamodb.stream.save_stream(stream)
+        ts_aws.rds.stream.save_stream(stream)
 
         if stream_jobs['initialize']:
             ts_aws.sqs.stream__initialize.send_message({
