@@ -25,7 +25,7 @@ def run(event, context):
 
         if stream._status_analyze == ts_model.Status.INITIALIZING:
             try:
-                stream_segments = ts_aws.dynamodb.stream_segment.get_stream_segments(stream.stream_id)
+                stream_segments = ts_aws.dynamodb.stream_segment.get_stream_segments(stream)
             except ts_model.Exception as e:
                 if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
                     stream_segments = []
