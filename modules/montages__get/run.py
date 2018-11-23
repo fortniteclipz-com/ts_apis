@@ -1,4 +1,4 @@
-import ts_aws.dynamodb.montage
+import ts_aws.rds.montage
 import ts_logger
 
 import json
@@ -10,7 +10,7 @@ def run(event, context):
     try:
         logger.info("start", event=event, context=context)
         user_id = event['requestContext']['authorizer']['claims']['cognito:username']
-        montages = ts_aws.dynamodb.montage.get_user_montages(user_id)
+        montages = ts_aws.rds.montage.get_user_montages(user_id)
         logger.info("success", montages=montages)
         return {
             'statusCode': 200,

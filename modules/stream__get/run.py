@@ -1,6 +1,6 @@
-import ts_aws.dynamodb.stream
-import ts_aws.dynamodb.stream_moment
-import ts_aws.dynamodb.stream_segment
+import ts_aws.rds.stream
+import ts_aws.rds.stream_moment
+import ts_aws.rds.stream_segment
 import ts_logger
 import ts_model.Exception
 
@@ -16,16 +16,16 @@ def run(event, context):
         logger.info("params", params=params)
         stream_id = params['stream_id']
 
-        stream = ts_aws.dynamodb.stream.get_stream(stream_id)
+        stream = ts_aws.rds.stream.get_stream(stream_id)
         try:
-            stream_moments = ts_aws.dynamodb.stream_moment.get_stream_moments(stream.stream_id)
+            stream_moments = ts_aws.rds.stream_moment.get_stream_moments(stream)
         except ts_model.Exception as e:
             if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
                 stream_moments = []
 
         if stream._status_analyze == ts_model.Status.INITIALIZING:
             try:
-                stream_segments = ts_aws.dynamodb.stream_segment.get_stream_segments(stream)
+                stream_segments = ts_aws.rds.stream_segment.get_stream_segments(stream)
             except ts_model.Exception as e:
                 if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
                     stream_segments = []
