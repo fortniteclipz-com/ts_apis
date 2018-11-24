@@ -17,23 +17,17 @@ def run(event, context):
         stream_id = params['stream_id']
 
         stream = ts_aws.rds.stream.get_stream(stream_id)
-        try:
-            stream_moments = ts_aws.rds.stream_moment.get_stream_moments(stream)
-        except ts_model.Exception as e:
-            if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
-                stream_moments = []
+        stream_moments = []
 
         if stream._status_analyze == ts_model.Status.INITIALIZING:
-            try:
-                stream_segments = ts_aws.rds.stream_segment.get_stream_segments(stream)
-            except ts_model.Exception as e:
-                if e.code == ts_model.Exception.STREAM_MOMENTS__NOT_EXIST:
-                    stream_segments = []
-
+            stream_segments = ts_aws.rds.stream_segment.get_stream_segments(stream)
             downloaded_stream_segments = list(filter(lambda ss: ss._status_download == ts_model.Status.READY, stream_segments))
             analyzed_stream_segments = list(filter(lambda ss: ss._status_analyze == ts_model.Status.READY, stream_segments))
-            stream._status_analyze_percentage = (len(downloaded_stream_segments) + len(analyzed_stream_segments)) / (len(stream_segments) * 2) * 100
-            stream._status_analyze_percentage = 99 if stream._status_analyze_percentage > 99 else stream._status_analyze_percentage
+            stream['_status_analyze_percentage'] = (len(downloaded_stream_segments) + len(analyzed_stream_segments)) / (len(stream_segments) * 2) * 100
+            stream['_status_analyze_percentage'] = 99 if stream['_status_analyze_percentage'] > 99 else stream['_status_analyze_percentage']
+
+        if stream._status_analyze == ts_model.Status.READY:
+            stream_moments = ts_aws.rds.stream_moment.get_stream_moments(stream)
 
         logger.info("success", stream=stream, stream_moments=stream_moments)
         return {
