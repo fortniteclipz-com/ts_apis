@@ -24,7 +24,7 @@ plugins:
   - serverless-python-requirements
 
 custom:
-  userPoolId: us-west-2_YJIuN6odA
+  userPoolId: us-west-2_FdQiY1UDH
   config: ${file(../ts_shared/ts_config/ts_config/ts_config.yml)}
   pythonRequirements:
     dockerizePip: non-linux
