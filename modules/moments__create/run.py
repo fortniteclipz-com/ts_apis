@@ -22,7 +22,7 @@ def run(event, context):
         game = body['game']
 
         if game != 'fortnite':
-            raise ts_model.Exception(ts_model.Exception.STREAM__GAME_NOT_SUPPORTED)
+            raise ts_model.Exception(ts_model.Exception.STREAM_MOMENTS__GAME_NOT_SUPPORTED)
 
         stream_jobs = {
             'initialize': False,
