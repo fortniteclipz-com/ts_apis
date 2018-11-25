@@ -8,9 +8,6 @@ api--moments--create:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
-  package:
-    include:
-      - modules/moments__create/run.py
 
 api--montage--create:
   handler: run.run
@@ -22,9 +19,6 @@ api--montage--create:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
-  package:
-    include:
-      - modules/montage__create/run.py
 
 api--montages--get:
   handler: run.run
@@ -36,9 +30,6 @@ api--montages--get:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
-  package:
-    include:
-      - modules/montages__get/run.py
 
 api--montages--get-recent:
   handler: run.run
@@ -48,9 +39,6 @@ api--montages--get-recent:
           path: montages/recent
           method: get
           cors: true
-  package:
-    include:
-      - modules/montages__get_recent/run.py
 
 api--stream--get:
   handler: run.run
@@ -60,9 +48,6 @@ api--stream--get:
           path: stream/{stream_id}
           method: get
           cors: true
-  package:
-    include:
-      - modules/stream__get/run.py
 
 api--streams--get-recent:
   handler: run.run
@@ -72,6 +57,3 @@ api--streams--get-recent:
           path: streams/recent
           method: get
           cors: true
-  package:
-    include:
-      - modules/streams__get_recent/run.py
