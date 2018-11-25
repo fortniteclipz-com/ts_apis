@@ -2,7 +2,6 @@ import ts_aws.rds.stream
 import ts_aws.rds.stream_moment
 import ts_aws.rds.stream_segment
 import ts_logger
-import ts_model.Exception
 
 import json
 import traceback

@@ -6,6 +6,7 @@ import ts_aws.sqs.clip
 import ts_aws.sqs.montage
 import ts_aws.sqs.stream__initialize
 import ts_logger
+import ts_model.Exception
 import ts_model.Montage
 import ts_model.Status
 
