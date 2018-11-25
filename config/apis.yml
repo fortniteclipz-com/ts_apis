@@ -1,6 +1,5 @@
 api--moments--create:
-  handler: run.run
-  module: modules/moments__create
+  handler: modules/moments__create/run.run
   events:
       - http:
           path: stream/{stream_id}/moments
@@ -10,8 +9,7 @@ api--moments--create:
             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
 
 api--montage--create:
-  handler: run.run
-  module: modules/montage__create
+  handler: modules/montage__create/run.run
   events:
       - http:
           path: montage
@@ -21,8 +19,7 @@ api--montage--create:
             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
 
 api--montages--get:
-  handler: run.run
-  module: modules/montages__get
+  handler: modules/montages__get/run.run
   events:
       - http:
           path: montages
@@ -32,8 +29,7 @@ api--montages--get:
             arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.userPoolId}
 
 api--montages--get-recent:
-  handler: run.run
-  module: modules/montages__get_recent
+  handler: modules/montages__get_recent/run.run
   events:
       - http:
           path: montages/recent
@@ -41,8 +37,7 @@ api--montages--get-recent:
           cors: true
 
 api--stream--get:
-  handler: run.run
-  module: modules/stream__get
+  handler: modules/stream__get/run.run
   events:
       - http:
           path: stream/{stream_id}
@@ -50,8 +45,7 @@ api--stream--get:
           cors: true
 
 api--streams--get-recent:
-  handler: run.run
-  module: modules/streams__get_recent
+  handler: modules/streams__get_recent/run.run
   events:
       - http:
           path: streams/recent
