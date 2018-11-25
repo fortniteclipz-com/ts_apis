@@ -84,6 +84,7 @@ def run(event, context):
             stream_id=stream.stream_id,
             streamer=stream.streamer,
             duration=montage_duration,
+            clips=len(clip_ids),
             _status=ts_model.Status.INITIALIZING,
         )
 
