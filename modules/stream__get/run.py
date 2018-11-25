@@ -19,7 +19,7 @@ def run(event, context):
         stream = ts_aws.rds.stream.get_stream(stream_id)
         stream_moments = []
 
-        if stream._status_analyze == ts_model.Status.INITIALIZING:
+        if stream._status_initialize == ts_model.Status.READY and stream._status_analyze == ts_model.Status.INITIALIZING:
             stream_segments = ts_aws.rds.stream_segment.get_stream_segments(stream)
             downloaded_stream_segments = list(filter(lambda ss: ss._status_download == ts_model.Status.READY, stream_segments))
             analyzed_stream_segments = list(filter(lambda ss: ss._status_analyze == ts_model.Status.READY, stream_segments))
