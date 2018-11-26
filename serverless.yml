@@ -19,22 +19,20 @@ package:
   exclude:
     - '*/**'
   include:
-    - modules/moments__create/run.py
-    - modules/montage__create/run.py
-    - modules/montages__get/run.py
-    - modules/montages__get_recent/run.py
-    - modules/stream__get/run.py
-    - modules/streams__get_recent/run.py
+    - modules/**/run.py
 
 plugins:
   - serverless-python-requirements
 
 custom:
-  userPoolId: us-west-2_FdQiY1UDH
+  userPoolId: us-west-2_H9IIkxWl0
   config: ${file(../ts_shared/ts_config/ts_config/ts_config.yml)}
   pythonRequirements:
     dockerizePip: non-linux
     dockerSsh: true
+    pipCmdExtraArgs:
+      - --process-dependency-links
+    slim: true
 
 functions:
   - ${file(./config/apis.yml)}
