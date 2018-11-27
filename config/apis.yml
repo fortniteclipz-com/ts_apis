@@ -6,7 +6,7 @@ api--moments--create:
           method: post
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.cognito.pool-id}
+            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.config.cognito.pool-id}
 
 api--montage--create:
   handler: modules/montage__create/run.run
@@ -16,7 +16,7 @@ api--montage--create:
           method: post
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.cognito.pool-id}
+            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.config.cognito.pool-id}
 
 api--montages--get:
   handler: modules/montages__get/run.run
@@ -26,7 +26,7 @@ api--montages--get:
           method: get
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.cognito.pool-id}
+            arn: arn:aws:cognito-idp:${self:custom.config.region}:${self:custom.config.account-id}:userpool/${self:custom.config.cognito.pool-id}
 
 api--montages--get-recent:
   handler: modules/montages__get_recent/run.run
