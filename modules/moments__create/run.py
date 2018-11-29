@@ -38,6 +38,9 @@ def run(event, context):
                     stream_id=stream_id,
                 )
 
+        if stream._status_analyze == ts_model.Status.INITIALIZING:
+            raise ts_model.Exception(ts_model.Exception.STREAM__ALREADY_ANALYZING)
+
         if stream._status_analyze == ts_model.Status.READY:
             raise ts_model.Exception(ts_model.Exception.STREAM__ALREADY_ANALYZED)
 
