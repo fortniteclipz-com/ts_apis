@@ -1,4 +1,4 @@
-service: ts-api
+service: ts-apis
 
 provider:
   name: aws
