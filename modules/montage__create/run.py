@@ -44,7 +44,7 @@ def run(event, context):
         montage_id = f"m-{shortuuid.uuid()}"
         montage_clips = [];
         montage_duration = 0;
-        def get_clips(arg):
+        def get(arg):
             (index, _clip) = arg
             nonlocal montage_duration
             time_in = _clip['time_in']
@@ -69,16 +69,16 @@ def run(event, context):
 
             return (clip, montage_clip)
 
-        [clips, montage_clips] = zip(*list(map(get_clips, enumerate(clips))))
+        [clips, montage_clips] = zip(*list(map(get, enumerate(clips))))
         ts_aws.rds.clip.save_clips(clips)
 
-        def send_clips(_clip):
+        def send(_clip):
             ts_aws.sqs.clip.send_message({
                 'clip_id': _clip.clip_id,
             })
             return _clip.clip_id
 
-        clip_ids = list(map(send_clips, clips))
+        clip_ids = list(map(send, clips))
         montage = ts_model.Montage(
             montage_id=montage_id,
             user_id=user_id,
