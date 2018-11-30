@@ -38,18 +38,18 @@ def run(event, context):
                     stream_id=stream_id,
                 )
 
-        if stream._status_analyze == ts_model.Status.INITIALIZING:
+        if stream._status_analyze == ts_model.Status.READYING:
             raise ts_model.Exception(ts_model.Exception.STREAM__ALREADY_ANALYZING)
 
         if stream._status_analyze == ts_model.Status.READY:
             raise ts_model.Exception(ts_model.Exception.STREAM__ALREADY_ANALYZED)
 
         if stream._status_initialize == ts_model.Status.NONE:
-            stream._status_initialize = ts_model.Status.INITIALIZING
+            stream._status_initialize = ts_model.Status.READYING
             stream_jobs['initialize'] = True
 
         if stream._status_analyze == ts_model.Status.NONE:
-            stream._status_analyze = ts_model.Status.INITIALIZING
+            stream._status_analyze = ts_model.Status.READYING
             stream_jobs['analyze'] = True
 
         stream.game = game
