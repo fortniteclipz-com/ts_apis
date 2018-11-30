@@ -41,7 +41,7 @@ def run(event, context):
         if stream._status_analyze == ts_model.Status.WORKING:
             raise ts_model.Exception(ts_model.Exception.STREAM__ALREADY_ANALYZING)
 
-        if stream._status_analyze == ts_model.Status.READY:
+        if stream._status_analyze == ts_model.Status.DONE:
             raise ts_model.Exception(ts_model.Exception.STREAM__ALREADY_ANALYZED)
 
         if stream._status_initialize == ts_model.Status.NONE:
