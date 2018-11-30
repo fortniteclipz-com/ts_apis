@@ -24,11 +24,6 @@ def run(event, context):
         if game != 'fortnite':
             raise ts_model.Exception(ts_model.Exception.STREAM_MOMENTS__GAME_NOT_SUPPORTED)
 
-        stream_jobs = {
-            'initialize': False,
-            'analyze': False,
-        }
-
         try:
             stream = ts_aws.rds.stream.get_stream(stream_id)
         except ts_model.Exception as e:
@@ -38,32 +33,18 @@ def run(event, context):
                     stream_id=stream_id,
                 )
 
-        if stream._status_analyze == ts_model.Status.WORKING:
-            raise ts_model.Exception(ts_model.Exception.STREAM__STATUS_ANALYZE_WORKING)
-
         if stream._status_analyze == ts_model.Status.DONE:
             raise ts_model.Exception(ts_model.Exception.STREAM__STATUS_ANALYZE_DONE)
 
-        if stream._status_initialize == ts_model.Status.NONE:
-            stream._status_initialize = ts_model.Status.WORKING
-            stream_jobs['initialize'] = True
-
-        if stream._status_analyze == ts_model.Status.NONE:
-            stream._status_analyze = ts_model.Status.WORKING
-            stream_jobs['analyze'] = True
+        if stream._status_analyze == ts_model.Status.WORKING:
+            raise ts_model.Exception(ts_model.Exception.STREAM__STATUS_ANALYZE_WORKING)
 
         stream.game = game
+        stream._status_analyze = ts_model.Status.WORKING
         ts_aws.rds.stream.save_stream(stream)
-
-        if stream_jobs['initialize']:
-            ts_aws.sqs.stream__initialize.send_message({
-                'stream_id': stream.stream_id,
-            })
-
-        if stream_jobs['analyze']:
-            ts_aws.sqs.stream__analyze.send_message({
-                'stream_id': stream.stream_id,
-            })
+        ts_aws.sqs.stream__analyze.send_message({
+            'stream_id': stream.stream_id,
+        })
 
         logger.info("success", stream=stream)
         return {
