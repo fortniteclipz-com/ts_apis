@@ -4,7 +4,7 @@ parameters = [{
     'stream_id': "328002305",
 }]
 
-for params in parameters:
-    event = {'pathParameters': params}
+for p in parameters:
+    event = {'pathParameters': p}
     run.run(event, {})
 

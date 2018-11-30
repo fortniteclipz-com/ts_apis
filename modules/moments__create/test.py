@@ -5,9 +5,9 @@ parameters = [{
     'stream_id': "335886831",
 }]
 
-for params in parameters:
+for p in parameters:
     event = {
-        'pathParameters': params,
+        'pathParameters': p,
         'body': json.dumps({
             'game': 'fortnite',
         })
