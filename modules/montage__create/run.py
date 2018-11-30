@@ -2,9 +2,7 @@ import ts_aws.rds.clip
 import ts_aws.rds.montage
 import ts_aws.rds.montage_clip
 import ts_aws.rds.stream
-import ts_aws.sqs.clip
 import ts_aws.sqs.montage
-import ts_aws.sqs.stream__initialize
 import ts_logger
 import ts_model.Exception
 import ts_model.Montage
@@ -34,17 +32,10 @@ def run(event, context):
                     stream_id=stream_id,
                 )
 
-        if stream._status_initialize == ts_model.Status.NONE:
-            stream._status_initialize = ts_model.Status.WORKING
-            ts_aws.rds.stream.save_stream(stream)
-            ts_aws.sqs.stream__initialize.send_message({
-                'stream_id': stream.stream_id,
-            })
-
         montage_id = f"m-{shortuuid.uuid()}"
         montage_clips = [];
         montage_duration = 0;
-        def get(arg):
+        def create(arg):
             (index, _clip) = arg
             nonlocal montage_duration
             time_in = _clip['time_in']
@@ -69,23 +60,16 @@ def run(event, context):
 
             return (clip, montage_clip)
 
-        [clips, montage_clips] = zip(*list(map(get, enumerate(clips))))
+        [clips, montage_clips] = zip(*list(map(create, enumerate(clips))))
         ts_aws.rds.clip.save_clips(clips)
 
-        def send(_clip):
-            ts_aws.sqs.clip.send_message({
-                'clip_id': _clip.clip_id,
-            })
-            return _clip.clip_id
-
-        clip_ids = list(map(send, clips))
         montage = ts_model.Montage(
             montage_id=montage_id,
             user_id=user_id,
             stream_id=stream.stream_id,
             streamer=stream.streamer,
             duration=montage_duration,
-            clips=len(clip_ids),
+            clips=len(clips),
             _status=ts_model.Status.WORKING,
         )
 

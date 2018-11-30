@@ -1,6 +1,5 @@
 import ts_aws.rds.stream
 import ts_aws.sqs.stream__analyze
-import ts_aws.sqs.stream__initialize
 import ts_logger
 import ts_model.Exception
 import ts_model.Status
