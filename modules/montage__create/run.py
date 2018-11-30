@@ -35,7 +35,7 @@ def run(event, context):
                 )
 
         if stream._status_initialize == ts_model.Status.NONE:
-            stream._status_initialize = ts_model.Status.READYING
+            stream._status_initialize = ts_model.Status.WORKING
             ts_aws.rds.stream.save_stream(stream)
             ts_aws.sqs.stream__initialize.send_message({
                 'stream_id': stream.stream_id,
@@ -59,7 +59,7 @@ def run(event, context):
                 stream_id=stream.stream_id,
                 time_in=time_in,
                 time_out=time_out,
-                _status=ts_model.Status.READYING,
+                _status=ts_model.Status.WORKING,
             )
             montage_clip = ts_model.MontageClip(
                 montage_id=montage_id,
@@ -86,7 +86,7 @@ def run(event, context):
             streamer=stream.streamer,
             duration=montage_duration,
             clips=len(clip_ids),
-            _status=ts_model.Status.READYING,
+            _status=ts_model.Status.WORKING,
         )
 
         ts_aws.rds.montage.save_montage(montage)
