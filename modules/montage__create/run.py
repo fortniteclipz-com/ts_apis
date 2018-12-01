@@ -50,7 +50,6 @@ def run(event, context):
                 stream_id=stream.stream_id,
                 time_in=time_in,
                 time_out=time_out,
-                _status=ts_model.Status.WORKING,
             )
             montage_clip = ts_model.MontageClip(
                 montage_id=montage_id,
