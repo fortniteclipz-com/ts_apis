@@ -60,7 +60,6 @@ def run(event, context):
             return (clip, montage_clip)
 
         [clips, montage_clips] = zip(*list(map(create, enumerate(clips))))
-        ts_aws.rds.clip.save_clips(clips)
 
         montage = ts_model.Montage(
             montage_id=montage_id,
@@ -72,8 +71,9 @@ def run(event, context):
             _status=ts_model.Status.WORKING,
         )
 
-        ts_aws.rds.montage.save_montage(montage)
+        ts_aws.rds.clip.save_clips(clips)
         ts_aws.rds.montage_clip.save_montage_clips(montage_clips)
+        ts_aws.rds.montage.save_montage(montage)
         ts_aws.sqs.montage.send_message({
             'montage_id': montage.montage_id,
         })
