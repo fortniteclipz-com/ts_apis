@@ -12,7 +12,7 @@ provider:
   environment:
     TS_ENV: ${self:custom.config.stage}
 
-  apiName: twitch-stitch-${self:custom.config.stage}
+  apiName: ts-${self:custom.config.stage}
   memorySize: 128
   timeout: 30
 
